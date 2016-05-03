@@ -3,4 +3,16 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+
+    <!-- Hearthstone class colors -->
+    <color name="warriorColor">#c8481b</color>
+    <color name="shamanColor">#323b6f</color>
+    <color name="rogueColor">#332b20</color>
+    <color name="paladinColor">#ed9e23</color>
+    <color name="hunterColor">#1c5f30</color>
+    <color name="druidColor">#845d1e</color>
+    <color name="warlockColor">#733652</color>
+    <color name="mageColor">#306892</color>
+    <color name="priestColor">#fcf6df</color>
+
 </resources>
