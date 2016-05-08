@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import java.io.IOException;
 
@@ -22,9 +23,11 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener {
 
     private OkHttpClient mClient;
+    private TextView mTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +35,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        mTextView = (TextView) findViewById(R.id.text_view);
+        mClient = new OkHttpClient();
 
         try {
             getCardsAsync();
@@ -60,8 +66,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView.setNavigationItemSelectedListener(this);
     }
 
-    void getCardsAsync() throws IOException {
-        mClient = new OkHttpClient();
+    private void getCardsAsync() throws IOException {
         Request request = new Request.Builder()
                 .url("https://omgvamp-hearthstone-v1.p.mashape.com/cards")
                 .header("X-Mashape-Key", BuildConfig.MASHAPE_HEARTHSTONE_API_KEY)
@@ -78,9 +83,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     public void onResponse(Call call, final Response response) throws IOException {
                         if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
 
-                        String res = response.body().string();
+                        final String res = response.body().string();
 
-                        Log.v("RESPONSE TAG", res);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                mTextView.setText("got em");
+                            }
+                        });
                     }
                 });
     }
