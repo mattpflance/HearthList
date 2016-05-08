@@ -1,8 +1,5 @@
 package com.mattpflance.hearthlist.models;
 
-import com.mattpflance.hearthlist.enums.CardRarity;
-import com.mattpflance.hearthlist.enums.PlayerClass;
-
 import java.util.ArrayList;
 
 /**
@@ -10,18 +7,22 @@ import java.util.ArrayList;
  */
 public abstract class AbstractCard {
 
+    protected final int ABSTRACT_CARD_VAR_COUNT = 6;
+
     protected String mId;
     protected String mName;
     protected String mCardSet;
-    protected CardRarity mCardRarity;
-    protected PlayerClass mPlayerClass;
+    protected String mCardRarity;
+    protected String mPlayerClass;
+    protected boolean mCollectible;
 
     protected AbstractCard(ArrayList<String> params) {
         mId = params.get(0);
         mName = params.get(1);
         mCardSet = params.get(2);
-        mCardRarity = CardRarity.values()[Integer.parseInt(params.get(3))];
-        mPlayerClass = PlayerClass.values()[Integer.parseInt(params.get(4))];
+        mCardRarity = params.get(3);
+        mPlayerClass = params.get(4);
+        mCollectible = Boolean.parseBoolean(params.get(5));
     }
 
 }
