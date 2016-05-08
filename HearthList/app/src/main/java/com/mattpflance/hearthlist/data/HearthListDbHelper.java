@@ -24,17 +24,19 @@ public class HearthListDbHelper extends SQLiteOpenHelper {
         final String SQL_CREATE_CARD_TABLE =
                 "CREATE TABLE " + CardEntry.TABLE_NAME + " (" +
                 CardEntry._ID + " INTEGER PRIMARY KEY," +
+                CardEntry.COLUMN_ID + " TEXT UNIQUE NOT NULL, " +
                 CardEntry.COLUMN_NAME + " TEXT UNIQUE NOT NULL, " +
                 CardEntry.COLUMN_SET + " TEXT NOT NULL, " +
-                CardEntry.COLUMN_TYPE + " TEXT NOT NULL, " +
-                CardEntry.COLUMN_FACTION + " TEXT NOT NULL, " +
                 CardEntry.COLUMN_RARITY + " TEXT NOT NULL, " +
-                CardEntry.COLUMN_TEXT + " TEXT NOT NULL, " +
+                CardEntry.COLUMN_PLAYER_CLASS + " TEXT NOT NULL, " +
                 CardEntry.COLUMN_FLAVOR + " TEXT NOT NULL, " +
                 CardEntry.COLUMN_COLLECT + " BOOLEAN NOT NULL, " +
                 CardEntry.COLUMN_RACE + " TEXT NOT NULL, " +
                 CardEntry.COLUMN_REG_IMG + " BLOB, " +
                 CardEntry.COLUMN_GOLD_IMG + " BLOB " +
+                CardEntry.COLUMN_COST + " INTEGER " +
+                CardEntry.COLUMN_ATTACK + " INTEGER " +
+                CardEntry.COLUMN_HEALTH + " INTEGER " +
                 " );";
 
         final String SQL_CREATE_DECK_TABLE =

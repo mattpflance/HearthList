@@ -32,28 +32,32 @@ public class HearthListContract {
         // Table name
         public static final String TABLE_NAME = "cards";
 
-        // Card name
+        // AbstractCard Id
+        public static final String COLUMN_ID = "card_id";
+        // AbstractCard name
         public static final String COLUMN_NAME = "card_name";
-        // Card set the card is in
+        // AbstractCard set the card is in
         public static final String COLUMN_SET= "card_set";
-        // Card type
-        public static final String COLUMN_TYPE = "card_type";
-        // Card's faction (Mage, Warrior, Neutral, etc)
-        public static final String COLUMN_FACTION = "card_faction";
-        // Card rarity
+        // AbstractCard rarity
         public static final String COLUMN_RARITY = "card_rarity";
-        // Card's text
-        public static final String COLUMN_TEXT = "card_text";
-        // Card's flavor text
+        // AbstractCard class (Mage, Warrior, etc)
+        public static final String COLUMN_PLAYER_CLASS = "card_player_class";
+        // AbstractCard's flavor text
         public static final String COLUMN_FLAVOR = "card_flavor";
         // If the card is collectible or not
         public static final String COLUMN_COLLECT = "card_collectible";
-        // Card's race (Dragon, Mech, Murloc, etc)
+        // AbstractCard's race (Dragon, Mech, Murloc, etc)
         public static final String COLUMN_RACE = "card_race";
-        // Card's regular image
+        // AbstractCard's regular image
         public static final String COLUMN_REG_IMG = "card_reg_image";
-        // Card's gold image
+        // AbstractCard's gold image
         public static final String COLUMN_GOLD_IMG = "card_gold_image";
+        // AbstractCard's mana cost
+        public static final String COLUMN_COST = "card_cost";
+        // AbstractCard's attack
+        public static final String COLUMN_ATTACK = "card_attack";
+        // AbstractCard's health
+        public static final String COLUMN_HEALTH = "card_health";
     }
 
     /* Inner class that defines the table contents of the deck table */
