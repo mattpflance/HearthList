@@ -44,26 +44,26 @@ public class HearthListContract {
         public static final String COLUMN_PLAYER_CLASS = "card_player_class";
         // If the card is collectible or not
         public static final String COLUMN_COLLECT = "card_collectible";
+        // AbstractCard's mana cost
+        public static final String COLUMN_COST = "card_cost";
         // The card's artist
         public static final String COLUMN_ARTIST = "card_artist";
         // AbstractCard's text
         public static final String COLUMN_TEXT = "card_text";
         // AbstractCard's flavor text
         public static final String COLUMN_FLAVOR = "card_flavor";
-        // AbstractCard's race (Dragon, Mech, Murloc, etc)
-        public static final String COLUMN_RACE = "card_race";
+        // A JSON encoded array of a card's mechanics
+        public static final String COLUMN_MECHANICS = "card_mechanics";
         // AbstractCard's regular image
         public static final String COLUMN_REG_IMG = "card_reg_image";
         // AbstractCard's gold image
         public static final String COLUMN_GOLD_IMG = "card_gold_image";
-        // AbstractCard's mana cost
-        public static final String COLUMN_COST = "card_cost";
+        // AbstractCard's race (Dragon, Mech, Murloc, etc)
+        public static final String COLUMN_RACE = "card_race";
         // AbstractCard's attack
         public static final String COLUMN_ATTACK = "card_attack";
         // AbstractCard's health
         public static final String COLUMN_HEALTH = "card_health";
-        // A JSON encoded array of a card's mechanics
-        public static final String COLUMN_MECHANICS = "card_mechanics";
     }
 
     /* Inner class that defines the table contents of the deck table */
