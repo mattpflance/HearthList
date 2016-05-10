@@ -6,13 +6,13 @@
 
     <string name="action_settings">Settings</string>
 
-
     <!-- ViewPager / TabLayout strings -->
     <string name="tab_layout_cards">Cards</string>
     <string name="tab_layout_decks">Decks</string>
     <string name="tab_layout_error">Error</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <!-- Card list default text -->
+    <string name="mana_desc">An empty mana crystal</string>
+    <string name="card_desc">The card's image</string>
 
 </resources>
