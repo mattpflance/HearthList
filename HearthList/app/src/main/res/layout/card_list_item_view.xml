@@ -12,16 +12,46 @@
         android:layout_height="match_parent">
 
         <ImageView
-            android:id="@+id/mana_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/mana_desc" />
-
-        <ImageView
             android:id="@+id/card_image"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:contentDescription="@string/card_desc" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="?android:attr/listPreferredItemHeightLarge"
+            android:padding="@dimen/icon_padding">
+
+            <ImageView
+                android:id="@+id/mana_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:background="@drawable/ic_mana"
+                android:contentDescription="@string/mana_desc" />
+
+            <ImageView
+                android:id="@+id/attack_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:background="@drawable/ic_minion_attack"
+                android:contentDescription="@string/attack_desc" />
+
+            <ImageView
+                android:id="@+id/health_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:background="@drawable/ic_minion_health"
+                android:contentDescription="@string/health_desc" />
+
+        </RelativeLayout>
 
     </FrameLayout>
 
@@ -33,12 +63,14 @@
         <TextView
             android:id="@+id/card_name_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:text="N'Zoth, the Corruptor"/>
 
         <TextView
             android:id="@+id/card_text_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:text="Battlecry: Summon your Deathrattle minions that died this game."/>
 
     </LinearLayout>
 

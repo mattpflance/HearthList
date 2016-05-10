@@ -14,5 +14,7 @@
     <!-- Card list default text -->
     <string name="mana_desc">An empty mana crystal</string>
     <string name="card_desc">The card's image</string>
+    <string name="attack_desc">The card's attack icon</string>
+    <string name="health_desc">The card's health icon</string>
 
 </resources>

@@ -10,4 +10,7 @@
     <!-- Default elevations, per the Android Design guidelines. -->
     <dimen name="app_bar_elevation">4dp</dimen>
 
+    <!-- Card list padding -->
+    <dimen name="icon_padding">4dp</dimen>
+
 </resources>
