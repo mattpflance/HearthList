@@ -30,15 +30,17 @@
 
                 <ImageView
                     android:id="@+id/mana_icon"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:background="@drawable/ic_mana"
                     android:contentDescription="@string/mana_desc" />
 
                 <TextView
                     android:id="@+id/mana_textview"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    style="@style/black_outline_text"/>
 
             </FrameLayout>
 
@@ -52,14 +54,16 @@
 
                 <ImageView
                     android:id="@+id/attack_icon"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:contentDescription="@string/attack_desc" />
 
                 <TextView
                     android:id="@+id/attack_textview"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    style="@style/black_outline_text"/>
 
             </FrameLayout>
 
@@ -74,14 +78,16 @@
 
                 <ImageView
                     android:id="@+id/health_icon"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:contentDescription="@string/health_desc" />
 
                 <TextView
                     android:id="@+id/health_textview"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    style="@style/black_outline_text"/>
 
             </FrameLayout>
 

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Color scheme -->
     <color name="colorPrimary">#FFC107</color>
     <color name="colorPrimaryDark">#FFA000</color>
     <color name="colorAccent">#0091EA</color>
@@ -14,5 +15,16 @@
     <color name="warlockColor">#62406f</color>
     <color name="mageColor">#606da3</color>
     <color name="priestColor">#b9bdc3</color>
+
+    <!-- Hearthstone card rarity colors -->
+    <color name="free">@color/black</color>
+    <color name="common">#F4F4E8</color>
+    <color name="rare">#3C9AFE</color>
+    <color name="epic">#9642B4</color>
+    <color name="legendary">#E2960C</color>
+
+    <!-- Other colors -->
+    <color name="white">#FFF</color>
+    <color name="black">#000</color>
 
 </resources>
