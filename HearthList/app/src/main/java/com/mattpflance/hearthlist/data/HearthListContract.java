@@ -32,38 +32,41 @@ public class HearthListContract {
         // Table name
         public static final String TABLE_NAME = "cards";
 
-        // AbstractCard Id
-        public static final String COLUMN_ID = "card_id";
-        // AbstractCard name
+        // Card name
         public static final String COLUMN_NAME = "card_name";
-        // AbstractCard set the card is in
+        // Card set the card is in
         public static final String COLUMN_SET= "card_set";
-        // AbstractCard rarity
+        // Card's type (Minion, Spell, Weapon)
+        public static final String COLUMN_TYPE= "card_type";
+        // Card rarity
         public static final String COLUMN_RARITY = "card_rarity";
-        // AbstractCard class (Mage, Warrior, etc)
-        public static final String COLUMN_PLAYER_CLASS = "card_player_class";
         // If the card is collectible or not
         public static final String COLUMN_COLLECT = "card_collectible";
-        // AbstractCard's mana cost
+        // Card class (Mage, Warrior, etc)
+        public static final String COLUMN_PLAYER_CLASS = "card_player_class";
+        // Card's mana cost
         public static final String COLUMN_COST = "card_cost";
+        // Card's race (Dragon, Mech, Murloc, etc)
+        public static final String COLUMN_RACE = "card_race";
+        // Card's attack
+        public static final String COLUMN_ATTACK = "card_attack";
+        // Card's health/durability
+        public static final String COLUMN_HEALTH = "card_health";
         // The card's artist
         public static final String COLUMN_ARTIST = "card_artist";
-        // AbstractCard's text
+        // Card's text
         public static final String COLUMN_TEXT = "card_text";
-        // AbstractCard's flavor text
+        // Card's flavor text
         public static final String COLUMN_FLAVOR = "card_flavor";
         // A JSON encoded array of a card's mechanics
         public static final String COLUMN_MECHANICS = "card_mechanics";
-        // AbstractCard's regular image
+        // Card's regular image
         public static final String COLUMN_REG_IMG = "card_reg_image";
-        // AbstractCard's gold image
+        // Card's gold image
         public static final String COLUMN_GOLD_IMG = "card_gold_image";
-        // AbstractCard's race (Dragon, Mech, Murloc, etc)
-        public static final String COLUMN_RACE = "card_race";
-        // AbstractCard's attack
-        public static final String COLUMN_ATTACK = "card_attack";
-        // AbstractCard's health
-        public static final String COLUMN_HEALTH = "card_health";
+        // Only Basic, Promotion, Reward cards will have a HowToGet
+        public static final String COLUMN_HOW_TO_GET = "card_get";
+        public static final String COLUMN_HOW_TO_GET_GOLD = "card_get_gold";
     }
 
     /* Inner class that defines the table contents of the deck table */

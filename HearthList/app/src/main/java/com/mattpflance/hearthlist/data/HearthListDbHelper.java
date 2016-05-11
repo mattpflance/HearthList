@@ -24,22 +24,24 @@ public class HearthListDbHelper extends SQLiteOpenHelper {
         final String SQL_CREATE_CARD_TABLE =
                 "CREATE TABLE " + CardEntry.TABLE_NAME + " (" +
                 CardEntry._ID + " INTEGER PRIMARY KEY," +
-                CardEntry.COLUMN_ID + " TEXT UNIQUE NOT NULL, " +
                 CardEntry.COLUMN_NAME + " TEXT UNIQUE NOT NULL, " +
                 CardEntry.COLUMN_SET + " TEXT NOT NULL, " +
+                CardEntry.COLUMN_TYPE + " TEXT NOT NULL, " +
                 CardEntry.COLUMN_RARITY + " TEXT NOT NULL, " +
-                CardEntry.COLUMN_PLAYER_CLASS + " TEXT NOT NULL, " +
                 CardEntry.COLUMN_COLLECT + " BOOLEAN NOT NULL, " +
-                CardEntry.COLUMN_COST + " INTEGER NOT NULL, " +
+                CardEntry.COLUMN_PLAYER_CLASS + " TEXT, " +
+                CardEntry.COLUMN_COST + " INTEGER, " +
+                CardEntry.COLUMN_RACE + " TEXT, " +
+                CardEntry.COLUMN_ATTACK + " INTEGER, " +
+                CardEntry.COLUMN_HEALTH + " INTEGER, " +
                 CardEntry.COLUMN_ARTIST + " TEXT, " +
                 CardEntry.COLUMN_TEXT + " TEXT, " +
                 CardEntry.COLUMN_FLAVOR + " TEXT, " +
                 CardEntry.COLUMN_MECHANICS + " TEXT, " +
                 CardEntry.COLUMN_REG_IMG + " BLOB, " +
                 CardEntry.COLUMN_GOLD_IMG + " BLOB, " +
-                CardEntry.COLUMN_RACE + " TEXT, " +
-                CardEntry.COLUMN_ATTACK + " INTEGER, " +
-                CardEntry.COLUMN_HEALTH + " INTEGER " +
+                CardEntry.COLUMN_HOW_TO_GET + " TEXT, " +
+                CardEntry.COLUMN_HOW_TO_GET_GOLD + " TEXT " +
                 " );";
 
         final String SQL_CREATE_DECK_TABLE =
