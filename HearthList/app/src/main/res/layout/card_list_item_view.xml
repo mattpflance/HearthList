@@ -22,34 +22,68 @@
             android:layout_height="?android:attr/listPreferredItemHeightLarge"
             android:padding="@dimen/icon_padding">
 
-            <ImageView
-                android:id="@+id/mana_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <FrameLayout
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                android:background="@drawable/ic_mana"
-                android:contentDescription="@string/mana_desc" />
-
-            <ImageView
-                android:id="@+id/attack_icon"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/mana_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/ic_mana"
+                    android:contentDescription="@string/mana_desc" />
+
+                <TextView
+                    android:id="@+id/mana_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/attack_view"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                android:background="@drawable/ic_minion_attack"
-                android:contentDescription="@string/attack_desc" />
-
-            <ImageView
-                android:id="@+id/health_icon"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/attack_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/attack_desc" />
+
+                <TextView
+                    android:id="@+id/attack_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            </FrameLayout>
+
+            <!-- Will never overlap since TextViews are always integers < 100 -->
+            <FrameLayout
+                android:id="@+id/health_view"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"
-                android:background="@drawable/ic_minion_health"
-                android:contentDescription="@string/health_desc" />
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/health_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/health_desc" />
+
+                <TextView
+                    android:id="@+id/health_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            </FrameLayout>
 
         </RelativeLayout>
 

@@ -13,8 +13,11 @@
 
     <!-- Card list default text -->
     <string name="mana_desc">An empty mana crystal</string>
-    <string name="card_desc">The card's image</string>
-    <string name="attack_desc">The card's attack icon</string>
-    <string name="health_desc">The card's health icon</string>
+    <string name="card_desc">The card\'s image</string>
+    <string name="attack_desc">The card\'s attack icon</string>
+    <string name="health_desc">The card\'s health icon</string>
+
+    <!-- Cards Fragment strings -->
+    <string name="empty_cards_view">Please connect to the internet to get data.</string>
 
 </resources>
