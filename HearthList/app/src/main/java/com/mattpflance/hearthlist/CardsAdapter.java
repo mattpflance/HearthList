@@ -1,8 +1,10 @@
 package com.mattpflance.hearthlist;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -91,47 +93,45 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.CardsAdapter
     public void onBindViewHolder(CardsAdapterViewHolder cardsAdapterVh, int position) {
         mCursor.moveToPosition(position);
 
-        // Load card image
-        Glide.with(mContext)
-                .load(mCursor.getBlob(CardsFragment.COL_CARD_IMG))
-                .crossFade()
-                .into(cardsAdapterVh.mCardView);
+//        // Load card image
+//        Glide.with(mContext)
+//                .load(mCursor.getBlob(CardsFragment.COL_CARD_IMG))
+//                .crossFade()
+//                .into(cardsAdapterVh.mCardView);
 
         // Load mana cost
-        cardsAdapterVh.mManaTextView.setText(mCursor.getInt(CardsFragment.COL_CARD_COST));
+        String text = "" + mCursor.getInt(CardsFragment.COL_CARD_COST);
+        cardsAdapterVh.mManaTextView.setText(text);
 
         // Determine which icons to show for attack and health
-        String type = mCursor.getString(CardsFragment.COL_CARD_TYPE).toLowerCase();
+        String typeLower = mCursor.getString(CardsFragment.COL_CARD_TYPE).toLowerCase();
         int attackId = -1;
         int healthId = -1;
 
-        if (type.equals("minion")) {
+        if (typeLower.equals("minion")) {
             attackId = R.drawable.ic_minion_attack;
             healthId = R.drawable.ic_minion_health;
-        } else if (type.equals("weapon")) {
+        } else if (typeLower.equals("weapon")) {
             attackId = R.drawable.ic_weapon_attack;
             healthId = R.drawable.ic_weapon_health;
         }
 
         if (attackId == -1 && healthId == -1) {
             // This is a spell, hide the icons
-            cardsAdapterVh.mAttackView.setVisibility(View.GONE);
-            cardsAdapterVh.mHealthView.setVisibility(View.GONE);
+            cardsAdapterVh.mAttackView.setVisibility(View.INVISIBLE);
+            cardsAdapterVh.mHealthView.setVisibility(View.INVISIBLE);
         } else {
+            cardsAdapterVh.mAttackView.setVisibility(View.VISIBLE);
+            cardsAdapterVh.mHealthView.setVisibility(View.VISIBLE);
             // Otherwise, load icons
-            Glide.with(mContext)
-                    .load(attackId)
-                    .crossFade()
-                    .into(cardsAdapterVh.mAttackIcon);
-
-            Glide.with(mContext)
-                    .load(healthId)
-                    .crossFade()
-                    .into(cardsAdapterVh.mHealthIcon);
+            cardsAdapterVh.mAttackIcon.setImageResource(attackId);
+            cardsAdapterVh.mHealthIcon.setImageResource(healthId);
 
             // Now load the attack and health values
-            cardsAdapterVh.mAttackTextView.setText(mCursor.getInt(CardsFragment.COL_CARD_ATTACK));
-            cardsAdapterVh.mHealthTextView.setText(mCursor.getInt(CardsFragment.COL_CARD_HEALTH));
+            text = "" + mCursor.getInt(CardsFragment.COL_CARD_ATTACK);
+            cardsAdapterVh.mAttackTextView.setText(text);
+            text = "" + mCursor.getInt(CardsFragment.COL_CARD_HEALTH);
+            cardsAdapterVh.mHealthTextView.setText(text);
         }
 
         // Set card name
