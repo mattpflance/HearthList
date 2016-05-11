@@ -25,12 +25,12 @@ public class HearthListProvider extends ContentProvider {
         final String authority = HearthListContract.CONTENT_AUTHORITY;
 
         // Matches for cards
-        matcher.addURI(authority, HearthListContract.PATH_CARD, ALL_CARDS);
-        matcher.addURI(authority, HearthListContract.PATH_CARD + "/*", CARD);
+        matcher.addURI(authority, HearthListContract.PATH_ALL_CARDS, ALL_CARDS);
+        matcher.addURI(authority, HearthListContract.PATH_ALL_CARDS + "/*", CARD);
 
         // Matches for decks
-        matcher.addURI(authority, HearthListContract.PATH_DECK, ALL_DECKS);
-        matcher.addURI(authority, HearthListContract.PATH_DECK + "/*", DECK);
+        matcher.addURI(authority, HearthListContract.PATH_ALL_DECKS, ALL_DECKS);
+        matcher.addURI(authority, HearthListContract.PATH_ALL_DECKS + "/*", DECK);
 
         return matcher;
     }
@@ -70,22 +70,22 @@ public class HearthListProvider extends ContentProvider {
             case ALL_CARDS:
                 retCursor = mOpenHelper.getReadableDatabase().query(
                         HearthListContract.CardEntry.TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
                         null,
                         null,
-                        null,
-                        null,
-                        null,
-                        null);
+                        sortOrder);
                 break;
             case ALL_DECKS:
                 retCursor = mOpenHelper.getReadableDatabase().query(
                         HearthListContract.DeckEntry.TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
                         null,
                         null,
-                        null,
-                        null,
-                        null,
-                        null);
+                        sortOrder);
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);

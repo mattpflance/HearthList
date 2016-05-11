@@ -23,8 +23,8 @@ public class HearthListDbHelper extends SQLiteOpenHelper {
         // location setting, the city name, and the latitude and longitude
         final String SQL_CREATE_CARD_TABLE =
                 "CREATE TABLE " + CardEntry.TABLE_NAME + " (" +
-                CardEntry._ID + " INTEGER PRIMARY KEY," +
-                CardEntry.COLUMN_NAME + " TEXT UNIQUE NOT NULL, " +
+                CardEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                CardEntry.COLUMN_NAME + " TEXT NOT NULL, " +
                 CardEntry.COLUMN_SET + " TEXT NOT NULL, " +
                 CardEntry.COLUMN_TYPE + " TEXT NOT NULL, " +
                 CardEntry.COLUMN_RARITY + " TEXT NOT NULL, " +
@@ -46,7 +46,7 @@ public class HearthListDbHelper extends SQLiteOpenHelper {
 
         final String SQL_CREATE_DECK_TABLE =
                 "CREATE TABLE " + DeckEntry.TABLE_NAME + " (" +
-                DeckEntry._ID + " INTEGER PRIMARY KEY," +
+                DeckEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                 DeckEntry.COLUMN_NAME + " TEXT NOT NULL, " +
                 DeckEntry.COLUMN_CLASS + " TEXT NOT NULL, " +
                 DeckEntry.COLUMN_DECK_ARRAY + " TEXT " +

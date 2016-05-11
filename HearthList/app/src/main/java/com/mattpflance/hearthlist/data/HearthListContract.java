@@ -15,19 +15,25 @@ public class HearthListContract {
     public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
 
     // Possible paths for db
-    public static final String PATH_CARD = "cards";
-    public static final String PATH_DECK = "decks";
+    public static final String PATH_ALL_CARDS = "cards";
+    public static final String PATH_CARD = "card";
+    public static final String PATH_ALL_DECKS = "decks";
+    public static final String PATH_DECK = "deck";
 
     /* Inner class that defines the table contents of the card table */
     public static final class CardEntry implements BaseColumns {
 
         public static final Uri CONTENT_URI =
-                BASE_CONTENT_URI.buildUpon().appendPath(PATH_CARD).build();
+                BASE_CONTENT_URI.buildUpon().appendPath(PATH_ALL_CARDS).build();
+        public static final Uri CONTENT_ITEM_URI = BASE_CONTENT_URI.buildUpon()
+                .appendPath(PATH_ALL_CARDS)
+                .appendPath(PATH_CARD)
+                .build();
 
         public static final String CONTENT_TYPE =
-                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_CARD;
+                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_ALL_CARDS;
         public static final String CONTENT_ITEM_TYPE =
-                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_CARD;
+                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_ALL_CARDS;
 
         // Table name
         public static final String TABLE_NAME = "cards";
@@ -73,12 +79,16 @@ public class HearthListContract {
     public static final class DeckEntry implements BaseColumns {
 
         public static final Uri CONTENT_URI =
-                BASE_CONTENT_URI.buildUpon().appendPath(PATH_DECK).build();
+                BASE_CONTENT_URI.buildUpon().appendPath(PATH_ALL_DECKS).build();
+        public static final Uri CONTENT_ITEM_URI = BASE_CONTENT_URI.buildUpon()
+                .appendPath(PATH_ALL_DECKS)
+                .appendPath(PATH_DECK)
+                .build();
 
         public static final String CONTENT_TYPE =
-                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_DECK;
+                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_ALL_DECKS;
         public static final String CONTENT_ITEM_TYPE =
-                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_DECK;
+                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_ALL_DECKS;
 
         public static final String TABLE_NAME = "decks";
 
