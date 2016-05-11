@@ -7,10 +7,14 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.TextView;
 
 import com.mattpflance.hearthlist.data.HearthListContract;
@@ -19,15 +23,16 @@ import com.mattpflance.hearthlist.data.HearthListContract;
 /**
  *
  */
-public class CardsFragment extends Fragment {
+public class CardsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private CardsAdapter mCardsAdapter;
     private RecyclerView mRecyclerView;
     private TextView mEmptyView;
 
+    private static final int CARD_LOADER = 0;
+
     // Only want to show a subset of the data in this projection
     private static final String[] CARD_COLUMNS = {
-            HearthListContract.CardEntry.TABLE_NAME + "." + HearthListContract.CardEntry._ID,
             HearthListContract.CardEntry.COLUMN_NAME,
             HearthListContract.CardEntry.COLUMN_TYPE,
             HearthListContract.CardEntry.COLUMN_TEXT,
@@ -38,14 +43,13 @@ public class CardsFragment extends Fragment {
     };
 
     // These indices are tied to the projections
-    static final int COL_CARD_ID = 0;
-    static final int COL_CARD_NAME = 1;
-    static final int COL_CARD_TYPE = 2;
-    static final int COL_CARD_TEXT = 3;
-    static final int COL_CARD_IMG = 4;
-    static final int COL_CARD_COST = 5;
-    static final int COL_CARD_ATTACK = 6;
-    static final int COL_CARD_HEALTH = 7;
+    static final int COL_CARD_NAME = 0;
+    static final int COL_CARD_TYPE = 1;
+    static final int COL_CARD_TEXT = 2;
+    static final int COL_CARD_IMG = 3;
+    static final int COL_CARD_COST = 4;
+    static final int COL_CARD_ATTACK = 5;
+    static final int COL_CARD_HEALTH = 6;
 
     private OnFragmentInteractionListener mListener;
 
@@ -79,6 +83,7 @@ public class CardsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_cards, container, false);
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.cards_recycler_view);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mEmptyView = (TextView) view.findViewById(R.id.cards_recycler_empty_view);
 
         mCardsAdapter = new CardsAdapter(getActivity(), new CardsAdapter.CardsAdapterOnClickHandler() {
@@ -113,6 +118,13 @@ public class CardsFragment extends Fragment {
     }
 
     @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        // Init the loader
+        getLoaderManager().initLoader(CARD_LOADER, null, this);
+        super.onActivityCreated(savedInstanceState);
+    }
+
+    @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
@@ -131,5 +143,27 @@ public class CardsFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
+        String sortOrder = HearthListContract.CardEntry.COLUMN_COST + " ASC";
+        return new CursorLoader(
+                getActivity(),
+                HearthListContract.CardEntry.CONTENT_URI,
+                CARD_COLUMNS,
+                null,
+                null,
+                sortOrder);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        mCardsAdapter.swapCursor(data);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        mCardsAdapter.swapCursor(null);
     }
 }
