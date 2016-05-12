@@ -244,21 +244,20 @@ public class MainActivity extends AppCompatActivity implements
                                 HTGGold = card.get(MHS_HTG_GOLD).toString();
                             } catch (NullPointerException e) { Log.i(LOG_TAG, "No field found."); }
                         }
-//                                String bitmapUrl = card.getString(MHS_IMG);
-//                                byte[] image = null;
-//                                try {
-//                                    image = Glide.with(this)
-//                                            .load(bitmapUrl)
-//                                            .asBitmap()
-//                                            .toBytes()
-//                                            .into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
-//                                            .get();
-//                                } catch (ExecutionException ee) {
-//                                    ee.printStackTrace();
-//                                } catch (InterruptedException ie) {
-//                                    ie.printStackTrace();
-//                                }
-//
+                                String bitmapUrl;
+                                byte[] image = null;
+                                try {
+                                    bitmapUrl = card.get(MHS_IMG).toString();
+                                    image = Glide.with(this)
+                                            .load(bitmapUrl)
+                                            .asBitmap()
+                                            .toBytes()
+                                            .into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
+                                            .get();
+                                } catch (ExecutionException|InterruptedException e) { Log.e(LOG_TAG, "Error: " + e);
+                                } catch (NullPointerException npe) { Log.i(LOG_TAG, "No field found."); }
+
+// TODO Download goldImages after the cards list is complete
 //                                String goldBitmapUrl = card.getString(MHS_GOLD_IMG);
 //                                byte[] goldImage = null;
 //                                try {
@@ -291,8 +290,8 @@ public class MainActivity extends AppCompatActivity implements
                         cardValues.put(HearthListContract.CardEntry.COLUMN_ARTIST, artist);
                         cardValues.put(HearthListContract.CardEntry.COLUMN_HOW_TO_GET, HTG);
                         cardValues.put(HearthListContract.CardEntry.COLUMN_HOW_TO_GET_GOLD, HTGGold);
-//                                cardValues.put(HearthListContract.CardEntry.COLUMN_REG_IMG, image);
-//                                cardValues.put(HearthListContract.CardEntry.COLUMN_GOLD_IMG, goldImage);
+                        cardValues.put(HearthListContract.CardEntry.COLUMN_REG_IMG, image);
+//                        cardValues.put(HearthListContract.CardEntry.COLUMN_GOLD_IMG, goldImage);
 
                         cVVector.add(cardValues);
                     }

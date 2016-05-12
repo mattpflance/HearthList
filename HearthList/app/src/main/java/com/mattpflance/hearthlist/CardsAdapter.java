@@ -96,11 +96,22 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.CardsAdapter
     public void onBindViewHolder(CardsAdapterViewHolder cardsAdapterVh, int position) {
         mCursor.moveToPosition(position);
 
-//        // Load card image
-//        Glide.with(mContext)
-//                .load(mCursor.getBlob(CardsFragment.COL_CARD_IMG))
-//                .crossFade()
-//                .into(cardsAdapterVh.mCardView);
+        // Load card image
+        byte[] image = mCursor.getBlob(CardsFragment.COL_CARD_IMG);
+        if (image == null) {
+            // Temporary placeholder
+            Glide.with(mContext)
+                    .load(R.drawable.ic_menu_camera)
+                    .crossFade()
+                    .centerCrop()
+                    .into(cardsAdapterVh.mCardView);
+        } else {
+            Glide.with(mContext)
+                    .load(image)
+                    .crossFade()
+                    .centerCrop()
+                    .into(cardsAdapterVh.mCardView);
+        }
 
         // Load mana cost
         String text = "" + mCursor.getInt(CardsFragment.COL_CARD_COST);
