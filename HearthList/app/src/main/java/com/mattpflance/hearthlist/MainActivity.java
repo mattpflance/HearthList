@@ -1,6 +1,8 @@
 package com.mattpflance.hearthlist;
 
 import android.content.ContentValues;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -65,10 +67,15 @@ public class MainActivity extends AppCompatActivity implements
 
         mClient = new OkHttpClient();
 
-        try {
-            getCardsAsync();
-        } catch (IOException e) {
-            e.printStackTrace();
+        // Check SharedPreferences
+        SharedPreferences prefs = getPreferences(Context.MODE_PRIVATE);
+        boolean alreadyDownloaded = prefs.getBoolean(getString(R.string.card_download_key), false);
+        if (!alreadyDownloaded) {
+            try {
+                getCardsAsync();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
         mPagerFragment = (PagerFragment) getSupportFragmentManager()
@@ -114,12 +121,16 @@ public class MainActivity extends AppCompatActivity implements
                     public void onResponse(Call call, final Response response) throws IOException {
                         if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
 
-                        LinkedTreeMap cardSets = new Gson().fromJson(response.body().charStream(), LinkedTreeMap.class);
+                        LinkedTreeMap cardSets = new Gson().fromJson(response.body().charStream(),
+                                LinkedTreeMap.class);
 
                         storeIntoProvider(cardSets);
 
-                        // TODO Store value into SharedPreferences to stop another API call
-
+                        // Store a boolean (for now) so we do not make a second API call after download
+                        SharedPreferences prefs = getPreferences(Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = prefs.edit();
+                        editor.putBoolean(getString(R.string.card_download_key), true);
+                        editor.apply();
                     }
                 });
     }
@@ -254,8 +265,11 @@ public class MainActivity extends AppCompatActivity implements
                                             .toBytes()
                                             .into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
                                             .get();
-                                } catch (ExecutionException|InterruptedException e) { Log.e(LOG_TAG, "Error: " + e);
-                                } catch (NullPointerException npe) { Log.i(LOG_TAG, "No field found."); }
+                                } catch (ExecutionException|InterruptedException e) {
+                                    Log.e(LOG_TAG, "Error: " + e);
+                                } catch (NullPointerException npe) {
+                                    Log.i(LOG_TAG, "No field found.");
+                                }
 
 // TODO Download goldImages after the cards list is complete
 //                                String goldBitmapUrl = card.getString(MHS_GOLD_IMG);
@@ -300,14 +314,14 @@ public class MainActivity extends AppCompatActivity implements
                 if (cVVector.size() > 0) {
                     ContentValues[] cvArray = new ContentValues[cVVector.size()];
                     cVVector.toArray(cvArray);
-                    getContentResolver().bulkInsert(HearthListContract.CardEntry.CONTENT_ITEM_URI, cvArray);
+                    getContentResolver().bulkInsert(HearthListContract.CardEntry.CONTENT_ITEM_URI,
+                            cvArray);
                 }
 
             }
 
         }
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -335,9 +349,4 @@ public class MainActivity extends AppCompatActivity implements
     public void onFragmentInteraction(Uri uri){
 
     }
-
-    static class CardSets {
-        Map<String, Card[]> cardSetMap;
-    }
-
 }
