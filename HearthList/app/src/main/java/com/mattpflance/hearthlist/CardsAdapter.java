@@ -3,10 +3,13 @@ package com.mattpflance.hearthlist;
 import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -136,9 +139,11 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.CardsAdapter
 
         // Set card name
         cardsAdapterVh.mCardNameView.setText(mCursor.getString(CardsFragment.COL_CARD_NAME));
+        setCardNameRarity(cardsAdapterVh.mCardNameView);
 
         // Set card text
-        cardsAdapterVh.mCardDescView.setText(mCursor.getString(CardsFragment.COL_CARD_TEXT));
+        cardsAdapterVh.mCardDescView
+                .setText(Html.fromHtml(mCursor.getString(CardsFragment.COL_CARD_TEXT)));
     }
 
     @Override
@@ -167,5 +172,30 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.CardsAdapter
             CardsAdapterViewHolder vfh = (CardsAdapterViewHolder)viewHolder;
             vfh.onClick(vfh.itemView);
         }
+    }
+
+    private void setCardNameRarity(TextView textView) {
+        String rarity = mCursor.getString(CardsFragment.COL_CARD_RARITY).toLowerCase();
+        int colorId;
+
+        switch (rarity) {
+            case "common":
+                colorId = ContextCompat.getColor(mContext, R.color.common);
+                break;
+            case "rare":
+                colorId = ContextCompat.getColor(mContext, R.color.rare);
+                break;
+            case "epic":
+                colorId = ContextCompat.getColor(mContext, R.color.epic);
+                break;
+            case "legendary":
+                colorId = ContextCompat.getColor(mContext, R.color.legendary);
+                break;
+            default:
+                colorId = ContextCompat.getColor(mContext, R.color.black);
+                break;
+        }
+
+        textView.setTextColor(colorId);
     }
 }
