@@ -20,7 +20,10 @@ import com.bumptech.glide.load.resource.gif.GifDrawable;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.bumptech.glide.request.target.Target;
 import com.google.gson.Gson;
+import com.google.gson.internal.LinkedTreeMap;
 import com.mattpflance.hearthlist.data.HearthListContract;
+import com.mattpflance.hearthlist.data.HearthListDbHelper;
+import com.mattpflance.hearthlist.models.Card;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -28,7 +31,9 @@ import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Vector;
 import java.util.concurrent.ExecutionException;
 
@@ -109,7 +114,9 @@ public class MainActivity extends AppCompatActivity implements
                     public void onResponse(Call call, final Response response) throws IOException {
                         if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
 
-                        storeIntoProvider(response.body().string());
+                        LinkedTreeMap cardSets = new Gson().fromJson(response.body().charStream(), LinkedTreeMap.class);
+
+                        storeIntoProvider(cardSets);
 
                         // TODO Store value into SharedPreferences to stop another API call
 
@@ -117,7 +124,12 @@ public class MainActivity extends AppCompatActivity implements
                 });
     }
 
-    private void storeIntoProvider(String response) {
+    private void storeIntoProvider(LinkedTreeMap cardSets) throws NullPointerException {
+
+        final String LOG_TAG = "StoreIntoProvider";
+
+        // First, drop the table if it exists
+        new HearthListDbHelper(this).clearTable(HearthListContract.CardEntry.TABLE_NAME);
 
         // Names of JSON args needed
         final String MHS_NAME = "name";
@@ -140,71 +152,98 @@ public class MainActivity extends AppCompatActivity implements
         final String MHS_HTG = "howToGet";
         final String MHS_HTG_GOLD = "howToGetGold";
 
-        try {
-            JSONObject cardSets = new JSONObject(response);
-            int numOfCardSets = cardSets.length();
-            JSONArray cardSetNames = cardSets.names();
+        for (Object entry : cardSets.entrySet()) {
+            // Check for meaningful card sets only
+            LinkedTreeMap.Entry cardSet = (LinkedTreeMap.Entry) entry;
+            String cardSetName = cardSet.getKey().toString();
+            String cardSetNameLower = cardSetName.toLowerCase();
+            if (!(cardSetNameLower.equals("credits") || cardSetNameLower.equals("debug") ||
+                  cardSetNameLower.equals("missions") || cardSetNameLower.equals("hero skins") ||
+                  cardSetNameLower.equals("tavern brawl"))) {
 
-            for (int i=0; i<numOfCardSets; i++) {
-                // Check for meaningful card sets only
-                String cardSetName = cardSetNames.getString(i);
-                String cardSetNameLower = cardSetName.toLowerCase();
-                if (!(cardSetNameLower.equals("credits") || cardSetNameLower.equals("debug") ||
-                      cardSetNameLower.equals("missions") || cardSetNameLower.equals("hero skins") ||
-                      cardSetNameLower.equals("tavern brawl"))) {
+                // Then we can process the cards we want
+                ArrayList cards = (ArrayList) cardSet.getValue();
+                Vector<ContentValues> cVVector = new Vector<>(cards.size());
 
-                    // Then we can process the cards we want
-                    JSONArray cardSet = cardSets.getJSONArray(cardSetName);
-                    int cardSetLength = cardSet.length();
-                    Vector<ContentValues> cVVector = new Vector<>(cardSetLength);
+                for (Object cardSetCard : cards) {
 
-                    for (int j=0; j<cardSetLength; j++) {
+                    LinkedTreeMap card = (LinkedTreeMap) cardSetCard;
 
-                        JSONObject card = cardSet.getJSONObject(j);
+                    /**
+                     * We only care if the card is collectible and a minion, spell, or weapon
+                     * Unfortunately, the API is messy and try/catch blocks are needed everywhere..
+                     */
 
-                        // We only care if the card is collectible and a minion, spell, or weapon
+                    // Not always present
+                    boolean collectible = false;
+                    try {
+                        collectible = Boolean.parseBoolean(card.get(MHS_COLLECT).toString());
+                    } catch (NullPointerException e) { Log.i(LOG_TAG, "No field found."); }
+
+                    // Always present
+                    String type = card.get(MHS_TYPE).toString();
+                    String typeLower = type.toLowerCase();
+                    if (collectible && !typeLower.equals("hero")) {
+                        // Get our values to store
+                        String name = card.get(MHS_NAME).toString();
+
+                        // Not always present
+                        String playerClass = "Neutral";
                         try {
-                            boolean collectible = card.getBoolean(MHS_COLLECT);
-                            String type = card.getString(MHS_TYPE);
-                            String typeLower = type.toLowerCase();
-                            if (!typeLower.equals("hero")) {
-                                // Get our values to store
-                                String name = card.getString(MHS_NAME);
-                                String playerClass = card.getString(MHS_CLASS);
-                                String rarity = card.getString(MHS_RARITY);
-                                int cost = card.getInt(MHS_COST);
-                                int attack = -1;
-                                int health = -1;
-                                String race = null;
-                                if (!typeLower.equals("spell")) {
-                                    attack = card.getInt(MHS_ATTACK);
-                                    if (typeLower.equals("minion")) {
-                                        health = card.getInt(MHS_MINION_HP);
-                                        race = card.getString(MHS_RACE);
-                                    } else {
-                                        health = card.getInt(MHS_WEAPON_HP);
-                                    }
-                                }
-                                String text = card.getString(MHS_TEXT);
-                                String flavor = card.getString(MHS_FLAVOR);
-                                String artist = card.getString(MHS_ARTIST);
-                                //String mechanics = card.getJSONArray(MHS_MECHANICS);
-                                String HTG = null;
-                                String HTGGold = null;
-                                if (cardSetNameLower.equals("basic") ||
-                                        cardSetNameLower.equals("promotion") ||
-                                        cardSetNameLower.equals("reward")) {
-                                    try {
-                                        HTG = card.getString(MHS_HTG);
-                                    } catch (JSONException e) {
-                                        Log.e("MainActivity", "No HowToGet info.");
-                                    }
-                                    try {
-                                        HTGGold = card.getString(MHS_HTG_GOLD);
-                                    } catch (JSONException e) {
-                                        Log.e("MainActivity", "No HowToGetGold info.");
-                                    }
-                                }
+                            playerClass = card.get(MHS_CLASS).toString();
+                        } catch (NullPointerException e) { Log.i(LOG_TAG, "No field found."); }
+
+                        // Not always present
+                        String rarity = "Free";
+                        try {
+                            rarity = card.get(MHS_RARITY).toString();
+                        } catch (NullPointerException e) { Log.i(LOG_TAG, "No field found."); }
+
+                        int cost = (int) Double.parseDouble(card.get(MHS_COST).toString());
+                        int attack = -1;
+                        int health = -1;
+                        String race = null;
+                        if (!typeLower.equals("spell")) {
+                            attack = (int) Double.parseDouble(card.get(MHS_ATTACK).toString());
+                            if (typeLower.equals("minion")) {
+                                health = (int) Double.parseDouble(card.get(MHS_MINION_HP).toString());
+
+                                try {
+                                    race = card.get(MHS_RACE).toString();
+                                } catch (NullPointerException e) { Log.i(LOG_TAG, "No field found."); }
+                            } else {
+                                health = (int) Double.parseDouble(card.get(MHS_WEAPON_HP).toString());
+                            }
+                        }
+
+                        String text = "";
+                        try {
+                            text = card.get(MHS_TEXT).toString();
+                        } catch (NullPointerException e) { Log.i(LOG_TAG, "No field found."); }
+
+                        String flavor = "";
+                        try {
+                            flavor = card.get(MHS_FLAVOR).toString();
+                        } catch (NullPointerException e) { Log.i(LOG_TAG, "No field found."); }
+
+                        String artist = "";
+                        try {
+                            artist = card.get(MHS_ARTIST).toString();
+                        } catch (NullPointerException e) { Log.i(LOG_TAG, "No field found."); }
+
+                        //String mechanics = card.getJSONArray(MHS_MECHANICS);
+                        String HTG = null;
+                        String HTGGold = null;
+                        if (cardSetNameLower.equals("basic") ||
+                                cardSetNameLower.equals("promotion") ||
+                                cardSetNameLower.equals("reward")) {
+                            try {
+                                HTG = card.get(MHS_HTG).toString();
+                            } catch (NullPointerException e) { Log.i(LOG_TAG, "No field found."); }
+                            try {
+                                HTGGold = card.get(MHS_HTG_GOLD).toString();
+                            } catch (NullPointerException e) { Log.i(LOG_TAG, "No field found."); }
+                        }
 //                                String bitmapUrl = card.getString(MHS_IMG);
 //                                byte[] image = null;
 //                                try {
@@ -234,49 +273,40 @@ public class MainActivity extends AppCompatActivity implements
 //                                } catch (InterruptedException ie) {
 //                                    ie.printStackTrace();
 //                                }
-                                // Create ContentValues to store in out db
-                                ContentValues cardValues = new ContentValues();
+                        // Create ContentValues to store in out db
+                        ContentValues cardValues = new ContentValues();
 
-                                cardValues.put(HearthListContract.CardEntry.COLUMN_NAME, name);
-                                cardValues.put(HearthListContract.CardEntry.COLUMN_SET, cardSetName);
-                                cardValues.put(HearthListContract.CardEntry.COLUMN_TYPE, type);
-                                cardValues.put(HearthListContract.CardEntry.COLUMN_RARITY, rarity);
-                                cardValues.put(HearthListContract.CardEntry.COLUMN_COLLECT, collectible);
-                                cardValues.put(HearthListContract.CardEntry.COLUMN_PLAYER_CLASS, playerClass);
-                                cardValues.put(HearthListContract.CardEntry.COLUMN_COST, cost);
-                                cardValues.put(HearthListContract.CardEntry.COLUMN_ATTACK, attack);
-                                cardValues.put(HearthListContract.CardEntry.COLUMN_HEALTH, health);
-                                cardValues.put(HearthListContract.CardEntry.COLUMN_RACE, race);
-                                cardValues.put(HearthListContract.CardEntry.COLUMN_TEXT, text);
-                                cardValues.put(HearthListContract.CardEntry.COLUMN_FLAVOR, flavor);
-                                cardValues.put(HearthListContract.CardEntry.COLUMN_ARTIST, artist);
-                                cardValues.put(HearthListContract.CardEntry.COLUMN_HOW_TO_GET, HTG);
-                                cardValues.put(HearthListContract.CardEntry.COLUMN_HOW_TO_GET_GOLD, HTGGold);
+                        cardValues.put(HearthListContract.CardEntry.COLUMN_NAME, name);
+                        cardValues.put(HearthListContract.CardEntry.COLUMN_SET, cardSetName);
+                        cardValues.put(HearthListContract.CardEntry.COLUMN_TYPE, type);
+                        cardValues.put(HearthListContract.CardEntry.COLUMN_RARITY, rarity);
+                        cardValues.put(HearthListContract.CardEntry.COLUMN_COLLECT, collectible);
+                        cardValues.put(HearthListContract.CardEntry.COLUMN_PLAYER_CLASS, playerClass);
+                        cardValues.put(HearthListContract.CardEntry.COLUMN_COST, cost);
+                        cardValues.put(HearthListContract.CardEntry.COLUMN_ATTACK, attack);
+                        cardValues.put(HearthListContract.CardEntry.COLUMN_HEALTH, health);
+                        cardValues.put(HearthListContract.CardEntry.COLUMN_RACE, race);
+                        cardValues.put(HearthListContract.CardEntry.COLUMN_TEXT, text);
+                        cardValues.put(HearthListContract.CardEntry.COLUMN_FLAVOR, flavor);
+                        cardValues.put(HearthListContract.CardEntry.COLUMN_ARTIST, artist);
+                        cardValues.put(HearthListContract.CardEntry.COLUMN_HOW_TO_GET, HTG);
+                        cardValues.put(HearthListContract.CardEntry.COLUMN_HOW_TO_GET_GOLD, HTGGold);
 //                                cardValues.put(HearthListContract.CardEntry.COLUMN_REG_IMG, image);
 //                                cardValues.put(HearthListContract.CardEntry.COLUMN_GOLD_IMG, goldImage);
 
-                                cVVector.add(cardValues);
-                            }
-                        } catch (JSONException e) {
-                            Log.e("DownloadCards", "Card is not collectible.");
-                        }
+                        cVVector.add(cardValues);
                     }
+                }
 
-                    if (cVVector.size() > 0) {
-                        ContentValues[] cvArray = new ContentValues[cVVector.size()];
-                        cVVector.toArray(cvArray);
-                        getContentResolver().bulkInsert(HearthListContract.CardEntry.CONTENT_ITEM_URI, cvArray);
-                    }
-
+                if (cVVector.size() > 0) {
+                    ContentValues[] cvArray = new ContentValues[cVVector.size()];
+                    cVVector.toArray(cvArray);
+                    getContentResolver().bulkInsert(HearthListContract.CardEntry.CONTENT_ITEM_URI, cvArray);
                 }
 
             }
 
-        } catch (JSONException e) {
-            e.printStackTrace();
         }
-
-
     }
 
 
@@ -307,5 +337,8 @@ public class MainActivity extends AppCompatActivity implements
 
     }
 
+    static class CardSets {
+        Map<String, Card[]> cardSetMap;
+    }
 
 }
