@@ -62,4 +62,8 @@ public class HearthListDbHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + CardEntry.TABLE_NAME);
         onCreate(sqLiteDatabase);
     }
+
+    public void clearTable(String tableName) {
+        getWritableDatabase().delete(tableName, null, null);
+    }
 }
