@@ -95,22 +95,32 @@
 
     </FrameLayout>
 
+    <View
+        android:id="@+id/rarity_view"
+        android:layout_height="match_parent"
+        android:layout_width="@dimen/rarity_view_width"/>
+
     <LinearLayout
+        android:id="@+id/card_details"
         android:orientation="vertical"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="@dimen/inner_text_padding"
+        android:background="@drawable/gradient_priest">
 
         <TextView
             android:id="@+id/card_name_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="N'Zoth, the Corruptor"/>
+            style="@style/card_title"
+            android:text="Holy Smite"/>
 
         <TextView
             android:id="@+id/card_text_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Battlecry: Summon your Deathrattle minions that died this game."/>
+            style="@style/card_body"
+            android:text="Deal 2 damage."/>
 
     </LinearLayout>
 

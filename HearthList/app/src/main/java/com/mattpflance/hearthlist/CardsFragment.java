@@ -40,7 +40,8 @@ public class CardsFragment extends Fragment implements LoaderManager.LoaderCallb
             HearthListContract.CardEntry.COLUMN_REG_IMG,
             HearthListContract.CardEntry.COLUMN_COST,
             HearthListContract.CardEntry.COLUMN_ATTACK,
-            HearthListContract.CardEntry.COLUMN_HEALTH
+            HearthListContract.CardEntry.COLUMN_HEALTH,
+            HearthListContract.CardEntry.COLUMN_PLAYER_CLASS
     };
 
     // These indices are tied to the projections
@@ -52,6 +53,7 @@ public class CardsFragment extends Fragment implements LoaderManager.LoaderCallb
     static final int COL_CARD_COST = 5;
     static final int COL_CARD_ATTACK = 6;
     static final int COL_CARD_HEALTH = 7;
+    static final int COL_CARD_CLASS = 8;
 
     private OnFragmentInteractionListener mListener;
 

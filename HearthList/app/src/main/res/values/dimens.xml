@@ -11,6 +11,8 @@
     <dimen name="app_bar_elevation">4dp</dimen>
 
     <!-- Card list padding -->
+    <dimen name="rarity_view_width">12dp</dimen>
     <dimen name="icon_padding">4dp</dimen>
+    <dimen name="inner_text_padding">4dp</dimen>
 
 </resources>

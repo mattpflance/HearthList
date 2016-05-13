@@ -1,13 +1,9 @@
 package com.mattpflance.hearthlist;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.database.Cursor;
-import android.graphics.Color;
-import android.os.Bundle;
+import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.res.ResourcesCompat;
-import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -15,11 +11,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-
-import org.w3c.dom.Text;
 
 /**
  * Creates a list of cards from a cursor to a RecyclerView
@@ -43,6 +38,8 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.CardsAdapter
         public final ImageView mHealthIcon;
         public final TextView mAttackTextView;
         public final TextView mHealthTextView;
+        public final View mRarityView;
+        public final LinearLayout mCardDetailsLayout;
         public final TextView mCardNameView;
         public final TextView mCardDescView;
 
@@ -56,6 +53,8 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.CardsAdapter
             mHealthIcon = (ImageView) view.findViewById(R.id.health_icon);
             mAttackTextView = (TextView) view.findViewById(R.id.attack_textview);
             mHealthTextView = (TextView) view.findViewById(R.id.health_textview);
+            mRarityView = view.findViewById(R.id.rarity_view);
+            mCardDetailsLayout = (LinearLayout) view.findViewById(R.id.card_details);
             mCardNameView = (TextView) view.findViewById(R.id.card_name_view);
             mCardDescView = (TextView) view.findViewById(R.id.card_text_view);
             view.setOnClickListener(this);
@@ -99,19 +98,19 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.CardsAdapter
         // Load card image
         byte[] image = mCursor.getBlob(CardsFragment.COL_CARD_IMG);
         if (image == null) {
-            // Temporary placeholder
-            Glide.with(mContext)
-                    .load(R.drawable.ic_menu_camera)
-                    .crossFade()
-                    .centerCrop()
-                    .into(cardsAdapterVh.mCardView);
+            // TODO Temporary placeholder
         } else {
             Glide.with(mContext)
                     .load(image)
                     .crossFade()
                     .centerCrop()
+                    .override(100, 100)
                     .into(cardsAdapterVh.mCardView);
         }
+
+        // Give the card a background gradient based on class
+        setBackgroundToView(cardsAdapterVh.mCardDetailsLayout,
+                mCursor.getString(CardsFragment.COL_CARD_CLASS).toLowerCase());
 
         // Load mana cost
         String text = "" + mCursor.getInt(CardsFragment.COL_CARD_COST);
@@ -150,7 +149,9 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.CardsAdapter
 
         // Set card name
         cardsAdapterVh.mCardNameView.setText(mCursor.getString(CardsFragment.COL_CARD_NAME));
-        setCardNameRarity(cardsAdapterVh.mCardNameView);
+
+        // Set rarity view
+        setCardRarity(cardsAdapterVh.mRarityView);
 
         // Set card text
         cardsAdapterVh.mCardDescView
@@ -185,7 +186,7 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.CardsAdapter
         }
     }
 
-    private void setCardNameRarity(TextView textView) {
+    private void setCardRarity(View view) {
         String rarity = mCursor.getString(CardsFragment.COL_CARD_RARITY).toLowerCase();
         int colorId;
 
@@ -203,10 +204,56 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.CardsAdapter
                 colorId = ContextCompat.getColor(mContext, R.color.legendary);
                 break;
             default:
-                colorId = ContextCompat.getColor(mContext, R.color.black);
+                colorId = -1;
                 break;
         }
 
-        textView.setTextColor(colorId);
+        if (colorId != -1) {
+            view.setVisibility(View.VISIBLE);
+            view.setBackgroundColor(colorId);
+        } else {
+            view.setVisibility(View.GONE);
+        }
+    }
+
+    private void setBackgroundToView(LinearLayout backgroundView, String playerClass) {
+
+        Drawable drawable;
+
+        switch (playerClass) {
+            case "warrior":
+                drawable = ContextCompat.getDrawable(mContext, R.drawable.gradient_warrior);
+                break;
+            case "shaman":
+                drawable = ContextCompat.getDrawable(mContext, R.drawable.gradient_shaman);
+                break;
+            case "rogue":
+                drawable = ContextCompat.getDrawable(mContext, R.drawable.gradient_rogue);
+                break;
+            case "paladin":
+                drawable = ContextCompat.getDrawable(mContext, R.drawable.gradient_paladin);
+                break;
+            case "hunter":
+                drawable = ContextCompat.getDrawable(mContext, R.drawable.gradient_hunter);
+                break;
+            case "druid":
+                drawable = ContextCompat.getDrawable(mContext, R.drawable.gradient_druid);
+                break;
+            case "warlock":
+                drawable = ContextCompat.getDrawable(mContext, R.drawable.gradient_warlock);
+                break;
+            case "mage":
+                drawable = ContextCompat.getDrawable(mContext, R.drawable.gradient_mage);
+                break;
+            case "priest":
+                drawable = ContextCompat.getDrawable(mContext, R.drawable.gradient_priest);
+                break;
+            default:
+                drawable = ContextCompat.getDrawable(mContext, R.drawable.gradient_neutral);
+                break;
+        }
+
+        // Set background
+        backgroundView.setBackground(drawable);
     }
 }
