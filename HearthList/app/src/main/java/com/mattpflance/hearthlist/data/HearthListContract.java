@@ -46,8 +46,6 @@ public class HearthListContract {
         public static final String COLUMN_TYPE= "card_type";
         // Card rarity
         public static final String COLUMN_RARITY = "card_rarity";
-        // If the card is collectible or not
-        public static final String COLUMN_COLLECT = "card_collectible";
         // Card class (Mage, Warrior, etc)
         public static final String COLUMN_PLAYER_CLASS = "card_player_class";
         // Card's mana cost

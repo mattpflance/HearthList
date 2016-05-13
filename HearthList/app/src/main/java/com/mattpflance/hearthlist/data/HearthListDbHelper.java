@@ -28,7 +28,6 @@ public class HearthListDbHelper extends SQLiteOpenHelper {
                 CardEntry.COLUMN_SET + " TEXT NOT NULL, " +
                 CardEntry.COLUMN_TYPE + " TEXT NOT NULL, " +
                 CardEntry.COLUMN_RARITY + " TEXT NOT NULL, " +
-                CardEntry.COLUMN_COLLECT + " BOOLEAN NOT NULL, " +
                 CardEntry.COLUMN_PLAYER_CLASS + " TEXT, " +
                 CardEntry.COLUMN_COST + " INTEGER, " +
                 CardEntry.COLUMN_RACE + " TEXT, " +
