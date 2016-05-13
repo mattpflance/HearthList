@@ -105,22 +105,19 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="@dimen/inner_text_padding"
-        android:background="@drawable/gradient_priest">
+        android:padding="@dimen/inner_text_padding">
 
         <TextView
             android:id="@+id/card_name_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/card_title"
-            android:text="Holy Smite"/>
+            style="@style/card_title"/>
 
         <TextView
             android:id="@+id/card_text_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/card_body"
-            android:text="Deal 2 damage."/>
+            style="@style/card_body"/>
 
     </LinearLayout>
 
