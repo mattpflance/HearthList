@@ -7,20 +7,50 @@
 
     <!-- Hearthstone class colors -->
     <color name="warriorColor">#852d1b</color>
+    <color name="warriorColor70">#b3852d1b</color>
+    <color name="warriorColor10">#1a852d1b</color>
+
     <color name="shamanColor">#2c3360</color>
+    <color name="shamanColor70">#b32c3360</color>
+    <color name="shamanColor10">#1a2c3360</color>
+
     <color name="rogueColor">#3c3b42</color>
+    <color name="rogueColor70">#b33c3b42</color>
+    <color name="rogueColor10">#1a3c3b42</color>
+
     <color name="paladinColor">#df9d17</color>
+    <color name="paladinColor70">#b3df9d17</color>
+    <color name="paladinColor10">#1adf9d17</color>
+
     <color name="hunterColor">#326c15</color>
+    <color name="hunterColor70">#b3326c15</color>
+    <color name="hunterColor10">#1a326c15</color>
+
     <color name="druidColor">#67451f</color>
+    <color name="druidColor70">#b367451f</color>
+    <color name="druidColor10">#1a67451f</color>
+
     <color name="warlockColor">#62406f</color>
+    <color name="warlockColor70">#b362406f</color>
+    <color name="warlockColor10">#1a62406f</color>
+
     <color name="mageColor">#606da3</color>
+    <color name="mageColor70">#b3606da3</color>
+    <color name="mageColor10">#1a606da3</color>
+
     <color name="priestColor">#b9bdc3</color>
+    <color name="priestColor70">#b3b9bdc3</color>
+    <color name="priestColor10">#1ab9bdc3</color>
+
+    <color name="neutralColor">#83756d</color>
+    <color name="neutralColor70">#b383756d</color>
+    <color name="neutralColor10">#1a83756d</color>
 
     <!-- Hearthstone card rarity colors -->
     <color name="free">@color/black</color>
     <color name="common">#F4F4E8</color>
-    <color name="rare">#3C9AFE</color>
-    <color name="epic">#9642B4</color>
+    <color name="rare">#4c9fff</color>
+    <color name="epic">#b12fcc</color>
     <color name="legendary">#E2960C</color>
 
     <!-- Other colors -->
