@@ -4,11 +4,13 @@ import android.app.IntentService;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.util.Log;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.gif.GifDrawable;
 import com.bumptech.glide.request.target.Target;
 import com.mattpflance.hearthlist.data.HearthListContract;
 
@@ -36,6 +38,16 @@ public class DataDownloadIntentService extends IntentService {
     final int IMAGE_TYPE_REGULAR = 0;
     final int IMAGE_TYPE_GOLD = 1;
 
+    final String[] URL_COLUMNS = new String[] {
+            HearthListContract.CardEntry._ID,
+            HearthListContract.CardEntry.COLUMN_REG_IMG_URL,
+            HearthListContract.CardEntry.COLUMN_GOLD_IMG_URL
+    };
+
+    final int COLUMN_ID = 0;
+    final int COLUMN_REG_URL = 1;
+    final int COLUMN_GOLD_URL = 2;
+
     // Names of JSON args needed
     final String MHS_NAME = "name";
     final String MHS_TYPE = "type";
@@ -56,8 +68,7 @@ public class DataDownloadIntentService extends IntentService {
     final String MHS_GOLD_IMG = "imgGold";
 
     // Used to query image urls faster
-    private HashMap<String, String> mRegImageUrls;
-    private HashMap<String, String>  mGoldImageUrls;
+    private Cursor mCursor;
 
     public DataDownloadIntentService() {
         super("com.mattpflance.hearthlist.DataDownloadIntentService");
@@ -102,22 +113,26 @@ public class DataDownloadIntentService extends IntentService {
             return;
         }
 
-        mRegImageUrls = new HashMap<>();
-        mGoldImageUrls = new HashMap<>();
-
         downloadCardData(cardSets);
         endTime = System.currentTimeMillis() - startTime;
-        startTime = endTime;
+        startTime = System.currentTimeMillis();
         Log.e("CardData", "Finished downloading in " + endTime + " ms.");
+
+        // Get cursor
+        String sortOrder = HearthListContract.CardEntry.COLUMN_COST + " ASC";
+        mCursor = getContentResolver().query(HearthListContract.CardEntry.CONTENT_URI,
+                URL_COLUMNS, null, null, sortOrder);
 
         downloadImages(IMAGE_TYPE_REGULAR);
         endTime = System.currentTimeMillis() - startTime;
-        startTime = endTime;
+        //startTime = System.currentTimeMillis();
         Log.e("RegImages", "Finished downloading in " + endTime + " ms.");
 
 //        downloadImages(IMAGE_TYPE_GOLD);
 //        endTime = System.currentTimeMillis() - startTime;
 //        Log.e("GoldImages", "Finished downloading in " + endTime + " ms.");
+
+        mCursor.close();
     }
 
     private void downloadCardData(JSONObject cardSets) {
@@ -255,9 +270,6 @@ public class DataDownloadIntentService extends IntentService {
                         goldImageUrl = card.getString(MHS_GOLD_IMG);
                     } catch (JSONException e) { Log.i(LOG_TAG, "No gold image url."); }
 
-                    mRegImageUrls.put(name, imageUrl);
-                    mGoldImageUrls.put(name, goldImageUrl);
-
                     // Create ContentValues to store in out db
                     ContentValues cardValues = new ContentValues();
 
@@ -273,6 +285,8 @@ public class DataDownloadIntentService extends IntentService {
                     cardValues.put(HearthListContract.CardEntry.COLUMN_TEXT, text);
                     cardValues.put(HearthListContract.CardEntry.COLUMN_FLAVOR, flavor);
                     cardValues.put(HearthListContract.CardEntry.COLUMN_ARTIST, artist);
+                    cardValues.put(HearthListContract.CardEntry.COLUMN_REG_IMG_URL, imageUrl);
+                    cardValues.put(HearthListContract.CardEntry.COLUMN_GOLD_IMG_URL, goldImageUrl);
                     cardValues.put(HearthListContract.CardEntry.COLUMN_HOW_TO_GET, HTG);
                     cardValues.put(HearthListContract.CardEntry.COLUMN_HOW_TO_GET_GOLD, HTGGold);
 
@@ -291,32 +305,39 @@ public class DataDownloadIntentService extends IntentService {
     private void downloadImages(int imageType) {
 
         // cards.card_name = ?
-        final String sCardNameSelection =
+        final String sCardIdSelection =
                 HearthListContract.CardEntry.TABLE_NAME +
-                        "." + HearthListContract.CardEntry.COLUMN_NAME + " = ? ";
+                        "." + HearthListContract.CardEntry._ID + " = ? ";
 
-        Map<String, String>  imageUrls = (imageType == IMAGE_TYPE_REGULAR) ?
-                mRegImageUrls : mGoldImageUrls;
+        // Reset the cursor to first position
+        mCursor.moveToFirst();
 
-        for (Map.Entry<String, String> cardNameUrl : imageUrls.entrySet()) {
+        while (mCursor.moveToNext()) {
 
             byte[] image = null;
             try {
                 if (imageType == IMAGE_TYPE_REGULAR) {
                     image = Glide.with(this)
-                            .load(cardNameUrl.getValue())
+                            .load(mCursor.getString(COLUMN_REG_URL))
                             .asBitmap()
-                            .toBytes(Bitmap.CompressFormat.JPEG, 20)
+                            .toBytes(Bitmap.CompressFormat.JPEG, 50)
                             .atMost()
-                            .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
                             .diskCacheStrategy(DiskCacheStrategy.NONE)
                             .skipMemoryCache(true)
-                            .into(100, 100)
+                            .into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
                             .get();
                 } else {
                     // IMAGE_TYPE_GOLD
                     image = Glide.with(this)
-                            .load(cardNameUrl.getValue())
+                            .load(mCursor.getString(COLUMN_REG_URL))
+                            .asGif()
+                            .toBytes()
+                            .diskCacheStrategy(DiskCacheStrategy.NONE)
+                            .skipMemoryCache(true)
+                            .into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
+                            .get();
+                    Glide.with(this)
+                            .load(COLUMN_GOLD_URL)
                             .asGif()
                             .toBytes()
                             .into(30, 30)
@@ -337,7 +358,7 @@ public class DataDownloadIntentService extends IntentService {
 
             // Update database with blob
             getContentResolver().update(HearthListContract.CardEntry.CONTENT_ITEM_URI,
-                    imageCv, sCardNameSelection, new String[] { cardNameUrl.getKey() });
+                    imageCv, sCardIdSelection, new String[] { mCursor.getString(COLUMN_ID) });
         }
     }
 }

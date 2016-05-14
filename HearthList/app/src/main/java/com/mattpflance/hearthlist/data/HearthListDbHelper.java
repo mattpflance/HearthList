@@ -37,7 +37,9 @@ public class HearthListDbHelper extends SQLiteOpenHelper {
                 CardEntry.COLUMN_TEXT + " TEXT, " +
                 CardEntry.COLUMN_FLAVOR + " TEXT, " +
                 CardEntry.COLUMN_MECHANICS + " TEXT, " +
+                CardEntry.COLUMN_REG_IMG_URL + " TEXT, " +
                 CardEntry.COLUMN_REG_IMG + " BLOB, " +
+                CardEntry.COLUMN_GOLD_IMG_URL + " TEXT, " +
                 CardEntry.COLUMN_GOLD_IMG + " BLOB, " +
                 CardEntry.COLUMN_HOW_TO_GET + " TEXT, " +
                 CardEntry.COLUMN_HOW_TO_GET_GOLD + " TEXT " +
