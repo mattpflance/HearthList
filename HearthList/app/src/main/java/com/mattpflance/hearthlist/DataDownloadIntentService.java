@@ -1,16 +1,15 @@
 package com.mattpflance.hearthlist;
 
 import android.app.IntentService;
-import android.app.admin.SystemUpdatePolicy;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.util.Log;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.target.Target;
-import com.google.common.io.Files;
 import com.mattpflance.hearthlist.data.HearthListContract;
 
 import org.json.JSONArray;
@@ -18,7 +17,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
@@ -308,8 +306,12 @@ public class DataDownloadIntentService extends IntentService {
                     image = Glide.with(this)
                             .load(cardNameUrl.getValue())
                             .asBitmap()
-                            .toBytes()
-                            .into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
+                            .toBytes(Bitmap.CompressFormat.JPEG, 20)
+                            .atMost()
+                            .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
+                            .diskCacheStrategy(DiskCacheStrategy.NONE)
+                            .skipMemoryCache(true)
+                            .into(100, 100)
                             .get();
                 } else {
                     // IMAGE_TYPE_GOLD
@@ -317,12 +319,13 @@ public class DataDownloadIntentService extends IntentService {
                             .load(cardNameUrl.getValue())
                             .asGif()
                             .toBytes()
-                            .into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
+                            .into(30, 30)
                             .get();
                 }
             } catch (InterruptedException|ExecutionException e) {
-                Log.i(LOG_TAG, "Error downloading image.");
+                Log.i(LOG_TAG, "Failed to load.");
             }
+
 
             ContentValues imageCv = new ContentValues();
 
