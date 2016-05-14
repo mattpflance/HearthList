@@ -2,6 +2,8 @@ package com.mattpflance.hearthlist;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
@@ -17,6 +19,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+
+import java.io.ByteArrayOutputStream;
 
 /**
  * Creates a list of cards from a cursor to a RecyclerView
@@ -105,12 +109,22 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.CardsAdapter
             cardsAdapterVh.mCardView.setVisibility(View.GONE);
             cardsAdapterVh.mImageLoadingView.setVisibility(View.VISIBLE);
         } else {
-            cardsAdapterVh.mCardView.setVisibility(View.VISIBLE);
-            cardsAdapterVh.mImageLoadingView.setVisibility(View.GONE);
-            Glide.with(mContext)
-                    .load(image)
-                    .centerCrop()
-                    .into(cardsAdapterVh.mCardView);
+            if (cardsAdapterVh.mImageLoadingView.getVisibility() == View.VISIBLE) {
+                cardsAdapterVh.mCardView.setVisibility(View.VISIBLE);
+                cardsAdapterVh.mImageLoadingView.setVisibility(View.GONE);
+
+                // Crop the byte array
+                Bitmap bitmap = BitmapFactory.decodeByteArray(image, 0, image.length);
+                ByteArrayOutputStream blob = new ByteArrayOutputStream();
+                Bitmap.createBitmap(bitmap, 110, 100, 80, 80)
+                        .compress(Bitmap.CompressFormat.PNG, 0, blob);
+
+                Glide.with(mContext)
+                        .load(blob.toByteArray())
+                        .crossFade()
+                        .centerCrop()
+                        .into(cardsAdapterVh.mCardView);
+            }
         }
 
         // Give the card a background gradient based on class
