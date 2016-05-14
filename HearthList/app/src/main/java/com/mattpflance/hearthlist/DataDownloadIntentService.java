@@ -5,6 +5,7 @@ import android.app.admin.SystemUpdatePolicy;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.util.Log;
 
 import com.bumptech.glide.Glide;
@@ -17,6 +18,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Vector;
 import java.util.concurrent.ExecutionException;
 
@@ -30,6 +34,9 @@ import okhttp3.Request;
 public class DataDownloadIntentService extends IntentService {
 
     final String LOG_TAG = "DDIntentService";
+
+    final int IMAGE_TYPE_REGULAR = 0;
+    final int IMAGE_TYPE_GOLD = 1;
 
     // Names of JSON args needed
     final String MHS_NAME = "name";
@@ -50,6 +57,10 @@ public class DataDownloadIntentService extends IntentService {
     final String MHS_IMG = "img";
     final String MHS_GOLD_IMG = "imgGold";
 
+    // Used to query image urls faster
+    private HashMap<String, String> mRegImageUrls;
+    private HashMap<String, String>  mGoldImageUrls;
+
     public DataDownloadIntentService() {
         super("com.mattpflance.hearthlist.DataDownloadIntentService");
     }
@@ -64,6 +75,7 @@ public class DataDownloadIntentService extends IntentService {
         editor.commit();
 
         long startTime = System.currentTimeMillis();
+        long endTime = 0;
 
         OkHttpClient mClient = new OkHttpClient();
 
@@ -91,6 +103,26 @@ public class DataDownloadIntentService extends IntentService {
             // TODO send an error to the client via BroadcastReceiver
             return;
         }
+
+        mRegImageUrls = new HashMap<>();
+        mGoldImageUrls = new HashMap<>();
+
+        downloadCardData(cardSets);
+        endTime = System.currentTimeMillis() - startTime;
+        startTime = endTime;
+        Log.e("CardData", "Finished downloading in " + endTime + " ms.");
+
+        downloadImages(IMAGE_TYPE_REGULAR);
+        endTime = System.currentTimeMillis() - startTime;
+        startTime = endTime;
+        Log.e("RegImages", "Finished downloading in " + endTime + " ms.");
+
+//        downloadImages(IMAGE_TYPE_GOLD);
+//        endTime = System.currentTimeMillis() - startTime;
+//        Log.e("GoldImages", "Finished downloading in " + endTime + " ms.");
+    }
+
+    private void downloadCardData(JSONObject cardSets) {
 
         int numOfCardSets = cardSets.length();
         JSONArray cardSetNames = cardSets.names();
@@ -205,8 +237,8 @@ public class DataDownloadIntentService extends IntentService {
                     String HTG = "";
                     String HTGGold = "";
                     if (cardSetNameLower.equals("basic") ||
-                        cardSetNameLower.equals("promotion") ||
-                        cardSetNameLower.equals("reward")) {
+                            cardSetNameLower.equals("promotion") ||
+                            cardSetNameLower.equals("reward")) {
                         try {
                             HTG = card.getString(MHS_HTG);
                         } catch (JSONException e) { Log.i(LOG_TAG, "No HowToGet info."); }
@@ -215,33 +247,18 @@ public class DataDownloadIntentService extends IntentService {
                         } catch (JSONException e) { Log.i(LOG_TAG, "No HowToGetGold info."); }
                     }
 
-                    String bitmapUrl;
-                    byte[] image = null;
-//                    try {
-//                        bitmapUrl = card.getString(MHS_IMG);
-//                        image = Glide.with(this)
-//                                .load(bitmapUrl)
-//                                .asBitmap()
-//                                .toBytes()
-//                                .into(1, 1)
-//                                .get();
-//                    } catch (InterruptedException|ExecutionException|JSONException e) {
-//                        Log.i(LOG_TAG, "Error downloading image.");
-//                    }
+                    String imageUrl = "";
+                    try {
+                        imageUrl = card.getString(MHS_IMG);
+                    } catch (JSONException e) { Log.i(LOG_TAG, "No image url."); }
 
-                    String goldBitmapUrl;
-                    byte[] goldImage = null;
-//                    try {
-//                        goldBitmapUrl = card.getString(MHS_GOLD_IMG);
-//                        goldImage = Glide.with(this)
-//                                .load(goldBitmapUrl)
-//                                .asGif()
-//                                .toBytes()
-//                                .into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
-//                                .get();
-//                    } catch (ExecutionException|InterruptedException|JSONException e) {
-//                        Log.i(LOG_TAG, "Gold: No card image or image failed to load.");
-//                    }
+                    String goldImageUrl = "";
+                    try {
+                        goldImageUrl = card.getString(MHS_GOLD_IMG);
+                    } catch (JSONException e) { Log.i(LOG_TAG, "No gold image url."); }
+
+                    mRegImageUrls.put(name, imageUrl);
+                    mGoldImageUrls.put(name, goldImageUrl);
 
                     // Create ContentValues to store in out db
                     ContentValues cardValues = new ContentValues();
@@ -260,8 +277,6 @@ public class DataDownloadIntentService extends IntentService {
                     cardValues.put(HearthListContract.CardEntry.COLUMN_ARTIST, artist);
                     cardValues.put(HearthListContract.CardEntry.COLUMN_HOW_TO_GET, HTG);
                     cardValues.put(HearthListContract.CardEntry.COLUMN_HOW_TO_GET_GOLD, HTGGold);
-                    cardValues.put(HearthListContract.CardEntry.COLUMN_REG_IMG, image);
-                    cardValues.put(HearthListContract.CardEntry.COLUMN_GOLD_IMG, goldImage);
 
                     cVVector.add(cardValues);
                 }
@@ -273,9 +288,53 @@ public class DataDownloadIntentService extends IntentService {
                 getContentResolver().bulkInsert(HearthListContract.CardEntry.CONTENT_ITEM_URI, cvArray);
             }
         }
+    }
 
-        // Download finished!
-        long endTime = System.currentTimeMillis() - startTime;
-        Log.i("DONEEEE", "Finished downloading in " + endTime + " ms.");
+    private void downloadImages(int imageType) {
+
+        // cards.card_name = ?
+        final String sCardNameSelection =
+                HearthListContract.CardEntry.TABLE_NAME +
+                        "." + HearthListContract.CardEntry.COLUMN_NAME + " = ? ";
+
+        Map<String, String>  imageUrls = (imageType == IMAGE_TYPE_REGULAR) ?
+                mRegImageUrls : mGoldImageUrls;
+
+        for (Map.Entry<String, String> cardNameUrl : imageUrls.entrySet()) {
+
+            byte[] image = null;
+            try {
+                if (imageType == IMAGE_TYPE_REGULAR) {
+                    image = Glide.with(this)
+                            .load(cardNameUrl.getValue())
+                            .asBitmap()
+                            .toBytes()
+                            .into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
+                            .get();
+                } else {
+                    // IMAGE_TYPE_GOLD
+                    image = Glide.with(this)
+                            .load(cardNameUrl.getValue())
+                            .asGif()
+                            .toBytes()
+                            .into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
+                            .get();
+                }
+            } catch (InterruptedException|ExecutionException e) {
+                Log.i(LOG_TAG, "Error downloading image.");
+            }
+
+            ContentValues imageCv = new ContentValues();
+
+            if (imageType == IMAGE_TYPE_REGULAR) {
+                imageCv.put(HearthListContract.CardEntry.COLUMN_REG_IMG, image);
+            } else {
+                imageCv.put(HearthListContract.CardEntry.COLUMN_GOLD_IMG, image);
+            }
+
+            // Update database with blob
+            getContentResolver().update(HearthListContract.CardEntry.CONTENT_ITEM_URI,
+                    imageCv, sCardNameSelection, new String[] { cardNameUrl.getKey() });
+        }
     }
 }
