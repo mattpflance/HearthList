@@ -61,7 +61,8 @@ public class HearthListProvider extends ContentProvider {
     }
 
     @Override
-    public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
+    public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs,
+                        String sortOrder) {
 
         /* We query all cards/decks when displaying data and never a single card or deck */
 
@@ -133,10 +134,12 @@ public class HearthListProvider extends ContentProvider {
         if ( null == selection ) selection = "1";
         switch (match) {
             case CARD:
-                rowsDeleted = db.delete(HearthListContract.CardEntry.TABLE_NAME, selection, selectionArgs);
+                rowsDeleted = db.delete(HearthListContract.CardEntry.TABLE_NAME, selection,
+                        selectionArgs);
                 break;
             case DECK:
-                rowsDeleted = db.delete(HearthListContract.DeckEntry.TABLE_NAME, selection, selectionArgs);
+                rowsDeleted = db.delete(HearthListContract.DeckEntry.TABLE_NAME, selection,
+                        selectionArgs);
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
@@ -156,10 +159,12 @@ public class HearthListProvider extends ContentProvider {
 
         switch (match) {
             case CARD:
-                rowsUpdated = db.update(HearthListContract.CardEntry.TABLE_NAME, values, selection, selectionArgs);
+                rowsUpdated = db.update(HearthListContract.CardEntry.TABLE_NAME, values, selection,
+                        selectionArgs);
                 break;
             case DECK:
-                rowsUpdated = db.update(HearthListContract.DeckEntry.TABLE_NAME, values, selection, selectionArgs);
+                rowsUpdated = db.update(HearthListContract.DeckEntry.TABLE_NAME, values, selection,
+                        selectionArgs);
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
