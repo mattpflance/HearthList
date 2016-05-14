@@ -12,6 +12,8 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -31,6 +33,7 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.CardsAdapter
      */
     public class CardsAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public final ImageView mCardView;
+        public final ProgressBar mImageLoadingView;
         public final TextView mManaTextView;
         public final FrameLayout mAttackView;
         public final FrameLayout mHealthView;
@@ -46,6 +49,7 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.CardsAdapter
         public CardsAdapterViewHolder(View view) {
             super(view);
             mCardView = (ImageView) view.findViewById(R.id.card_image);
+            mImageLoadingView = (ProgressBar) view.findViewById(R.id.image_progress);
             mManaTextView = (TextView) view.findViewById(R.id.mana_textview);
             mAttackView = (FrameLayout) view.findViewById(R.id.attack_view);
             mHealthView = (FrameLayout) view.findViewById(R.id.health_view);
@@ -98,13 +102,14 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.CardsAdapter
         // Load card image
         byte[] image = mCursor.getBlob(CardsFragment.COL_CARD_IMG);
         if (image == null) {
-            // TODO Temporary placeholder
+            cardsAdapterVh.mCardView.setVisibility(View.GONE);
+            cardsAdapterVh.mImageLoadingView.setVisibility(View.VISIBLE);
         } else {
+            cardsAdapterVh.mCardView.setVisibility(View.VISIBLE);
+            cardsAdapterVh.mImageLoadingView.setVisibility(View.GONE);
             Glide.with(mContext)
                     .load(image)
-                    .crossFade()
                     .centerCrop()
-                    .override(100, 100)
                     .into(cardsAdapterVh.mCardView);
         }
 
@@ -160,7 +165,7 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.CardsAdapter
 
     @Override
     public int getItemViewType(int position) {
-        return 0;
+        return position;
     }
 
     @Override

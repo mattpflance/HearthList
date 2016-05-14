@@ -11,6 +11,7 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SimpleItemAnimator;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -88,6 +89,7 @@ public class CardsFragment extends Fragment implements LoaderManager.LoaderCallb
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.cards_recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        ((SimpleItemAnimator) mRecyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
         mEmptyView = (TextView) view.findViewById(R.id.cards_recycler_empty_view);
 
         mCardsAdapter = new CardsAdapter(getActivity(), new CardsAdapter.CardsAdapterOnClickHandler() {

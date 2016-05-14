@@ -17,6 +17,11 @@
             android:layout_height="match_parent"
             android:contentDescription="@string/card_desc" />
 
+        <ProgressBar
+            android:id="@+id/image_progress"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="?android:attr/listPreferredItemHeightLarge"
