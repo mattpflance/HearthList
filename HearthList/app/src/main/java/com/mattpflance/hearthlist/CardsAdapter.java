@@ -116,7 +116,7 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.CardsAdapter
                 // Crop the byte array
                 Bitmap bitmap = BitmapFactory.decodeByteArray(image, 0, image.length);
                 ByteArrayOutputStream blob = new ByteArrayOutputStream();
-                Bitmap.createBitmap(bitmap, 110, 100, 80, 80)
+                Bitmap.createBitmap(bitmap, 40, 50, 80, 80)
                         .compress(Bitmap.CompressFormat.PNG, 0, blob);
 
                 Glide.with(mContext)

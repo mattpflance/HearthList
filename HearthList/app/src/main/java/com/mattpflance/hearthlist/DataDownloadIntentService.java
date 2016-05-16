@@ -312,7 +312,7 @@ public class DataDownloadIntentService extends IntentService {
         // Reset the cursor to first position
         mCursor.moveToFirst();
 
-        while (mCursor.moveToNext()) {
+        do {
 
             byte[] image = null;
             try {
@@ -320,11 +320,11 @@ public class DataDownloadIntentService extends IntentService {
                     image = Glide.with(this)
                             .load(mCursor.getString(COLUMN_REG_URL))
                             .asBitmap()
-                            .toBytes(Bitmap.CompressFormat.JPEG, 50)
+                            .toBytes(Bitmap.CompressFormat.JPEG, 75)
                             .atMost()
                             .diskCacheStrategy(DiskCacheStrategy.NONE)
                             .skipMemoryCache(true)
-                            .into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
+                            .into(200, 200)
                             .get();
                 } else {
                     // IMAGE_TYPE_GOLD
@@ -335,12 +335,6 @@ public class DataDownloadIntentService extends IntentService {
                             .diskCacheStrategy(DiskCacheStrategy.NONE)
                             .skipMemoryCache(true)
                             .into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
-                            .get();
-                    Glide.with(this)
-                            .load(COLUMN_GOLD_URL)
-                            .asGif()
-                            .toBytes()
-                            .into(30, 30)
                             .get();
                 }
             } catch (InterruptedException|ExecutionException e) {
@@ -359,6 +353,6 @@ public class DataDownloadIntentService extends IntentService {
             // Update database with blob
             getContentResolver().update(HearthListContract.CardEntry.CONTENT_ITEM_URI,
                     imageCv, sCardIdSelection, new String[] { mCursor.getString(COLUMN_ID) });
-        }
+        } while (mCursor.moveToNext());
     }
 }
