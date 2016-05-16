@@ -4,4 +4,5 @@
     android:name="com.mattpflance.hearthlist.PagerFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginTop="@dimen/recyclerview_top_margin"
     android:id="@+id/view_pager_fragment"/>

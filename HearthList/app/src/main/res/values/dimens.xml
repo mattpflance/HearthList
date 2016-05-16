@@ -15,4 +15,6 @@
     <dimen name="icon_padding">4dp</dimen>
     <dimen name="inner_text_padding">4dp</dimen>
 
+    <dimen name="recyclerview_top_margin">100dp</dimen>
+
 </resources>
