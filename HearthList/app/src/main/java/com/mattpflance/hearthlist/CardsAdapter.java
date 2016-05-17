@@ -104,7 +104,6 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.CardsAdapter
         mCursor.moveToPosition(position);
 
         // Load card image
-        cardsAdapterVh.mImageLoadingView.setVisibility(View.GONE);
         String imagePath = mCursor.getString(Card.COL_REG_IMG_URL);
 
         Glide.with(mContext)
