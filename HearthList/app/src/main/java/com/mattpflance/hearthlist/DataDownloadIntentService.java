@@ -2,6 +2,7 @@ package com.mattpflance.hearthlist;
 
 import android.app.IntentService;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -10,7 +11,7 @@ import android.util.Log;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.resource.gif.GifDrawable;
+import com.bumptech.glide.request.FutureTarget;
 import com.bumptech.glide.request.target.Target;
 import com.mattpflance.hearthlist.data.HearthListContract;
 
@@ -18,9 +19,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Vector;
 import java.util.concurrent.ExecutionException;
 
@@ -260,12 +262,12 @@ public class DataDownloadIntentService extends IntentService {
                         } catch (JSONException e) { Log.i(LOG_TAG, "No HowToGetGold info."); }
                     }
 
-                    String imageUrl = "";
+                    String imageUrl = null;
                     try {
                         imageUrl = card.getString(MHS_IMG);
                     } catch (JSONException e) { Log.i(LOG_TAG, "No image url."); }
 
-                    String goldImageUrl = "";
+                    String goldImageUrl = null;
                     try {
                         goldImageUrl = card.getString(MHS_GOLD_IMG);
                     } catch (JSONException e) { Log.i(LOG_TAG, "No gold image url."); }
@@ -313,46 +315,16 @@ public class DataDownloadIntentService extends IntentService {
         mCursor.moveToFirst();
 
         do {
+            // TODO: Grab dimensions from dimen.xml for different screen support
+            int width = Utility.dpToPx(this, 300);
+            int height = Utility.dpToPx(this, 400);
 
-            byte[] image = null;
-            try {
-                if (imageType == IMAGE_TYPE_REGULAR) {
-                    image = Glide.with(this)
-                            .load(mCursor.getString(COLUMN_REG_URL))
-                            .asBitmap()
-                            .toBytes(Bitmap.CompressFormat.JPEG, 75)
-                            .atMost()
-                            .diskCacheStrategy(DiskCacheStrategy.NONE)
-                            .skipMemoryCache(true)
-                            .into(200, 200)
-                            .get();
-                } else {
-                    // IMAGE_TYPE_GOLD
-                    image = Glide.with(this)
-                            .load(mCursor.getString(COLUMN_REG_URL))
-                            .asGif()
-                            .toBytes()
-                            .diskCacheStrategy(DiskCacheStrategy.NONE)
-                            .skipMemoryCache(true)
-                            .into(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
-                            .get();
-                }
-            } catch (InterruptedException|ExecutionException e) {
-                Log.i(LOG_TAG, "Failed to load.");
-            }
+            Glide.with(this)
+                    // Url becomes name of the file
+                    .load((imageType == IMAGE_TYPE_REGULAR) ?
+                            mCursor.getString(COLUMN_REG_URL) : mCursor.getString(COLUMN_GOLD_URL))
+                    .downloadOnly(width, height);
 
-
-            ContentValues imageCv = new ContentValues();
-
-            if (imageType == IMAGE_TYPE_REGULAR) {
-                imageCv.put(HearthListContract.CardEntry.COLUMN_REG_IMG, image);
-            } else {
-                imageCv.put(HearthListContract.CardEntry.COLUMN_GOLD_IMG, image);
-            }
-
-            // Update database with blob
-            getContentResolver().update(HearthListContract.CardEntry.CONTENT_ITEM_URI,
-                    imageCv, sCardIdSelection, new String[] { mCursor.getString(COLUMN_ID) });
         } while (mCursor.moveToNext());
     }
 }

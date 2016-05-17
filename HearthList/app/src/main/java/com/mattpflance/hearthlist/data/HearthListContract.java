@@ -64,12 +64,10 @@ public class HearthListContract {
         public static final String COLUMN_FLAVOR = "card_flavor";
         // A JSON encoded array of a card's mechanics
         public static final String COLUMN_MECHANICS = "card_mechanics";
-        // Reg image url and blob
+        // Reg image url/Glide path
         public static final String COLUMN_REG_IMG_URL = "card_reg_image_url";
-        public static final String COLUMN_REG_IMG = "card_reg_image";
-        // Gold image url and blob
+        // Gold image url/Glide path
         public static final String COLUMN_GOLD_IMG_URL = "card_gold_image_url";
-        public static final String COLUMN_GOLD_IMG = "card_gold_image";
         // Only Basic, Promotion, Reward cards will have a HowToGet
         public static final String COLUMN_HOW_TO_GET = "card_get";
         public static final String COLUMN_HOW_TO_GET_GOLD = "card_get_gold";
