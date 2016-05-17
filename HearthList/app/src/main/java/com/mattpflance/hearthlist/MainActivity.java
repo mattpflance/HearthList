@@ -15,10 +15,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class MainActivity extends AppCompatActivity implements
-        PagerFragment.OnFragmentInteractionListener,
-        CardsFragment.OnFragmentInteractionListener,
-        DecksFragment.OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity {
 
     private PagerAdapter mPagerAdapter;
 
@@ -52,19 +49,6 @@ public class MainActivity extends AppCompatActivity implements
         mTabLayout = (TabLayout) findViewById(R.id.tab_layout);
         mTabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
         mTabLayout.setupWithViewPager(mViewPager);
-
-
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        if (fab != null) {
-//            fab.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//                    Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                            .setAction("Action", null).show();
-//                }
-//            });
-//        }
-
     }
 
     @Override
@@ -87,10 +71,5 @@ public class MainActivity extends AppCompatActivity implements
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onFragmentInteraction(Uri uri){
-
     }
 }
