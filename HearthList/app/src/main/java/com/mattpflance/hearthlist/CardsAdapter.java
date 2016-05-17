@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
@@ -15,12 +16,14 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.mattpflance.hearthlist.models.Card;
 
 import java.io.ByteArrayOutputStream;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Creates a list of cards from a cursor to a RecyclerView
@@ -37,7 +40,6 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.CardsAdapter
      */
     public class CardsAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public final ImageView mCardView;
-        public final ProgressBar mImageLoadingView;
         public final TextView mManaTextView;
         public final FrameLayout mAttackView;
         public final FrameLayout mHealthView;
@@ -53,7 +55,6 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.CardsAdapter
         public CardsAdapterViewHolder(View view) {
             super(view);
             mCardView = (ImageView) view.findViewById(R.id.card_image);
-            mImageLoadingView = (ProgressBar) view.findViewById(R.id.image_progress);
             mManaTextView = (TextView) view.findViewById(R.id.mana_textview);
             mAttackView = (FrameLayout) view.findViewById(R.id.attack_view);
             mHealthView = (FrameLayout) view.findViewById(R.id.health_view);
@@ -72,7 +73,6 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.CardsAdapter
         public void onClick(View v) {
             int adapterPosition = getAdapterPosition();
             mCursor.moveToPosition(adapterPosition);
-            // Handle onClick with given cursor
             mClickHandler.onClick(mCursor);
         }
     }
@@ -81,9 +81,9 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.CardsAdapter
         void onClick(Cursor cursor);
     }
 
-    public CardsAdapter(Context context, CardsAdapterOnClickHandler dh, View emptyView) {
+    public CardsAdapter(Context context, CardsAdapterOnClickHandler onClickHandler, View emptyView) {
         mContext = context;
-        mClickHandler = dh;
+        mClickHandler = onClickHandler;
         mEmptyView = emptyView;
     }
 
@@ -104,39 +104,28 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.CardsAdapter
         mCursor.moveToPosition(position);
 
         // Load card image
-        byte[] image = mCursor.getBlob(CardsFragment.COL_CARD_IMG);
-        if (image == null) {
-            cardsAdapterVh.mCardView.setVisibility(View.GONE);
-            cardsAdapterVh.mImageLoadingView.setVisibility(View.VISIBLE);
-        } else {
-            if (cardsAdapterVh.mImageLoadingView.getVisibility() == View.VISIBLE) {
-                cardsAdapterVh.mCardView.setVisibility(View.VISIBLE);
-                cardsAdapterVh.mImageLoadingView.setVisibility(View.GONE);
+        cardsAdapterVh.mImageLoadingView.setVisibility(View.GONE);
+        String imagePath = mCursor.getString(Card.COL_REG_IMG_URL);
 
-                // Crop the byte array
-                Bitmap bitmap = BitmapFactory.decodeByteArray(image, 0, image.length);
-                ByteArrayOutputStream blob = new ByteArrayOutputStream();
-                Bitmap.createBitmap(bitmap, 40, 50, 80, 80)
-                        .compress(Bitmap.CompressFormat.PNG, 0, blob);
-
-                Glide.with(mContext)
-                        .load(blob.toByteArray())
-                        .crossFade()
-                        .centerCrop()
-                        .into(cardsAdapterVh.mCardView);
-            }
-        }
+        Glide.with(mContext)
+                .load(imagePath)
+                // TODO: Add placeholder for errors
+                .centerCrop()
+                .crossFade()
+                // Load from internal storage
+                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                .into(cardsAdapterVh.mCardView);
 
         // Give the card a background gradient based on class
         setBackgroundToView(cardsAdapterVh.mCardDetailsLayout,
-                mCursor.getString(CardsFragment.COL_CARD_CLASS).toLowerCase());
+                mCursor.getString(Card.COL_CLASS).toLowerCase());
 
         // Load mana cost
-        String text = "" + mCursor.getInt(CardsFragment.COL_CARD_COST);
+        String text = "" + mCursor.getInt(Card.COL_COST);
         cardsAdapterVh.mManaTextView.setText(text);
 
         // Determine which icons to show for attack and health
-        String typeLower = mCursor.getString(CardsFragment.COL_CARD_TYPE).toLowerCase();
+        String typeLower = mCursor.getString(Card.COL_TYPE).toLowerCase();
         int attackId = -1;
         int healthId = -1;
 
@@ -160,26 +149,27 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.CardsAdapter
             cardsAdapterVh.mHealthIcon.setImageResource(healthId);
 
             // Now load the attack and health values
-            text = "" + mCursor.getInt(CardsFragment.COL_CARD_ATTACK);
+            text = "" + mCursor.getInt(Card.COL_ATTACK);
             cardsAdapterVh.mAttackTextView.setText(text);
-            text = "" + mCursor.getInt(CardsFragment.COL_CARD_HEALTH);
+            text = "" + mCursor.getInt(Card.COL_HEALTH);
             cardsAdapterVh.mHealthTextView.setText(text);
         }
 
         // Set card name
-        cardsAdapterVh.mCardNameView.setText(mCursor.getString(CardsFragment.COL_CARD_NAME));
+        cardsAdapterVh.mCardNameView.setText(mCursor.getString(Card.COL_NAME));
 
         // Set rarity view
         setCardRarity(cardsAdapterVh.mRarityView);
 
         // Set card text
         cardsAdapterVh.mCardDescView
-                .setText(Html.fromHtml(mCursor.getString(CardsFragment.COL_CARD_TEXT)));
+                .setText(Html.fromHtml(mCursor.getString(Card.COL_TEXT)));
     }
 
     @Override
     public int getItemViewType(int position) {
-        return position;
+        // THIS SHOULD ALWAYS RETURN 0
+        return 0;
     }
 
     @Override
@@ -206,7 +196,7 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.CardsAdapter
     }
 
     private void setCardRarity(View view) {
-        String rarity = mCursor.getString(CardsFragment.COL_CARD_RARITY).toLowerCase();
+        String rarity = mCursor.getString(Card.COL_RARITY).toLowerCase();
         int colorId;
 
         switch (rarity) {

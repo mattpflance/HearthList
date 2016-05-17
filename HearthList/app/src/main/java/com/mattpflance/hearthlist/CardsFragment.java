@@ -19,6 +19,7 @@ import android.view.ViewTreeObserver;
 import android.widget.TextView;
 
 import com.mattpflance.hearthlist.data.HearthListContract;
+import com.mattpflance.hearthlist.models.Card;
 
 
 /**
@@ -31,32 +32,6 @@ public class CardsFragment extends Fragment implements LoaderManager.LoaderCallb
     private TextView mEmptyView;
 
     private static final int CARD_LOADER = 0;
-
-    // Only want to show a subset of the data in this projection
-    private static final String[] CARD_COLUMNS = {
-            HearthListContract.CardEntry.COLUMN_NAME,
-            HearthListContract.CardEntry.COLUMN_TYPE,
-            HearthListContract.CardEntry.COLUMN_RARITY,
-            HearthListContract.CardEntry.COLUMN_TEXT,
-            HearthListContract.CardEntry.COLUMN_REG_IMG,
-            HearthListContract.CardEntry.COLUMN_COST,
-            HearthListContract.CardEntry.COLUMN_ATTACK,
-            HearthListContract.CardEntry.COLUMN_HEALTH,
-            HearthListContract.CardEntry.COLUMN_PLAYER_CLASS
-    };
-
-    // These indices are tied to the projections
-    static final int COL_CARD_NAME = 0;
-    static final int COL_CARD_TYPE = 1;
-    static final int COL_CARD_RARITY = 2;
-    static final int COL_CARD_TEXT = 3;
-    static final int COL_CARD_IMG = 4;
-    static final int COL_CARD_COST = 5;
-    static final int COL_CARD_ATTACK = 6;
-    static final int COL_CARD_HEALTH = 7;
-    static final int COL_CARD_CLASS = 8;
-
-    private OnFragmentInteractionListener mListener;
 
     public CardsFragment() {
     }
@@ -95,8 +70,10 @@ public class CardsFragment extends Fragment implements LoaderManager.LoaderCallb
         mCardsAdapter = new CardsAdapter(getActivity(), new CardsAdapter.CardsAdapterOnClickHandler() {
             @Override
             public void onClick(Cursor cursor) {
-                // TODO Bundle a Minion, Spell, Weapon into args and pass through to Intent
-                //startActivity(new Intent(getActivity(), CardDetailActivity.class));
+                Intent intent = new Intent(getActivity(), CardDetailsActivity.class);
+                Card card = (cursor != null) ? new Card(cursor) : null;
+                intent.putExtra("CARD", card);
+                startActivity(intent);
             }
         }, mEmptyView);
 
@@ -105,23 +82,23 @@ public class CardsFragment extends Fragment implements LoaderManager.LoaderCallb
         return view;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
+//    // TODO: Rename method, update argument and hook method into UI event
+//    public void onButtonPressed(Uri uri) {
+//        if (mListener != null) {
+//            mListener.onFragmentInteraction(uri);
+//        }
+//    }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
+//    @Override
+//    public void onAttach(Context context) {
+//        super.onAttach(context);
+//        if (context instanceof OnFragmentInteractionListener) {
+//            mListener = (OnFragmentInteractionListener) context;
+//        } else {
+//            throw new RuntimeException(context.toString()
+//                    + " must implement OnFragmentInteractionListener");
+//        }
+//    }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -129,27 +106,27 @@ public class CardsFragment extends Fragment implements LoaderManager.LoaderCallb
         getLoaderManager().initLoader(CARD_LOADER, null, this);
         super.onActivityCreated(savedInstanceState);
     }
+//
+//    @Override
+//    public void onDetach() {
+//        super.onDetach();
+//        //mListener = null;
+//    }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-    }
+//    /**
+//     * This interface must be implemented by activities that contain this
+//     * fragment to allow an interaction in this fragment to be communicated
+//     * to the activity and potentially other fragments contained in that
+//     * activity.
+//     * <p/>
+//     * See the Android Training lesson <a href=
+//     * "http://developer.android.com/training/basics/fragments/communicating.html"
+//     * >Communicating with Other Fragments</a> for more information.
+//     */
+//    public interface OnFragmentInteractionListener {
+//        // TODO: Update argument type and name
+//        void onFragmentInteraction(Uri uri);
+//    }
 
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
@@ -157,7 +134,7 @@ public class CardsFragment extends Fragment implements LoaderManager.LoaderCallb
         return new CursorLoader(
                 getActivity(),
                 HearthListContract.CardEntry.CONTENT_URI,
-                CARD_COLUMNS,
+                Card.CARD_COLUMNS,
                 null,
                 null,
                 sortOrder);
