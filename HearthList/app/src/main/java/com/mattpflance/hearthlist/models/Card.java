@@ -146,8 +146,16 @@ public class Card implements Parcelable {
     };
 
     public String getName() { return mCardName; }
+    public String getCardSet() { return mCardSet; }
+    public String getType() { return mCardType; }
+    public String getRarity() { return mCardRarity; }
+    public String getPlayerClass() { return mPlayerClass; }
+    public String getRace() { return mRace; }
+    public ArrayList<String> getMechanics() { return mMechanics; }
     public String getArtist() { return mArtist; }
     public String getFlavorText() { return mFlavorText; }
     public String getRegImageUrl() { return mRegImageUrl; }
     public String getGoldImageUrl() { return mGoldImageUrl; }
+    public String getHowToGetReg() { return mHowToGetReg; }
+    public String getHowToGetGold() { return mHowToGetGold; }
 }
