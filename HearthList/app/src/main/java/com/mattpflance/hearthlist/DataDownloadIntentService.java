@@ -143,7 +143,7 @@ public class DataDownloadIntentService extends IntentService {
 
         for (int i=0; i<numOfCardSets; i++) {
 
-            String cardSetName = "Unknown";
+            String cardSetName = null;
             try {
                 cardSetName = cardSetNames.getString(i);
             } catch (JSONException e) { Log.i(LOG_TAG, "No card set at position " + i); }
@@ -175,7 +175,7 @@ public class DataDownloadIntentService extends IntentService {
                 if (!typeLower.equals("hero")) {
 
                     // Get the card's name (always present)
-                    String name = "?";
+                    String name = null;
                     try {
                         name = card.getString(MHS_NAME);
                     } catch (JSONException e) { Log.i(LOG_TAG, "Card has no name."); }
@@ -202,7 +202,7 @@ public class DataDownloadIntentService extends IntentService {
                     // These values will always be present
                     int attack = -1;
                     int health = -1;
-                    String race = "None";
+                    String race = null;
                     if (!typeLower.equals("spell")) {
 
                         try {
@@ -227,19 +227,19 @@ public class DataDownloadIntentService extends IntentService {
                     }
 
                     // Text on a card
-                    String text = "";
+                    String text = null;
                     try {
                         text = card.getString(MHS_TEXT);
                     } catch (JSONException e) { Log.i(LOG_TAG, "Card has no text."); }
 
                     // Card's flavor text, if applicable
-                    String flavor = "N/A";
+                    String flavor = null;
                     try {
                         flavor = card.getString(MHS_FLAVOR);
                     } catch (JSONException e) { Log.i(LOG_TAG, "Card has no flavor text."); }
 
                     // The name of the card's artist, if applicable
-                    String artist = "N/A";
+                    String artist = null;
                     try {
                         artist = card.getString(MHS_ARTIST);
                     } catch (JSONException e) { Log.i(LOG_TAG, "Card has no artist."); }
@@ -248,8 +248,8 @@ public class DataDownloadIntentService extends IntentService {
                     //String mechanics = card.getJSONArray(MHS_MECHANICS);
 
                     // Some cards have a HowToGet field
-                    String HTG = "";
-                    String HTGGold = "";
+                    String HTG = null;
+                    String HTGGold = null;
                     if (cardSetNameLower.equals("basic") ||
                             cardSetNameLower.equals("promotion") ||
                             cardSetNameLower.equals("reward")) {
@@ -257,7 +257,7 @@ public class DataDownloadIntentService extends IntentService {
                             HTG = card.getString(MHS_HTG);
                         } catch (JSONException e) { Log.i(LOG_TAG, "No HowToGet info."); }
                         try {
-                            HTG = card.getString(MHS_HTG_GOLD);
+                            HTGGold = card.getString(MHS_HTG_GOLD);
                         } catch (JSONException e) { Log.i(LOG_TAG, "No HowToGetGold info."); }
                     }
 

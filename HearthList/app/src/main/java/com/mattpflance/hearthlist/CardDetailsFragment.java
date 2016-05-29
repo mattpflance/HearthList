@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -96,11 +97,77 @@ public class CardDetailsFragment extends Fragment {
                     .into(mCardImage);
         }
 
+        String info = mCard.getArtist();
         TextView textView = (TextView) view.findViewById(R.id.artist);
-        textView.setText(String.format(getString(R.string.artist_text), mCard.getArtist()));
+        if (info != null) {
+            textView.setText(String.format(getString(R.string.artist_text), info));
+        } else {
+            textView.setVisibility(View.GONE);
+        }
 
+        info = mCard.getFlavorText();
         textView = (TextView) view.findViewById(R.id.flavor_text);
-        textView.setText(String.format(getString(R.string.flavor_text), mCard.getFlavorText()));
+        if (info != null) {
+            textView.setText(String.format(getString(R.string.flavor_text), info));
+        } else {
+            textView.setVisibility(View.GONE);
+        }
+
+        info = mCard.getCardSet();
+        if (info != null) {
+            textView = (TextView) view.findViewById(R.id.card_set_text_view);
+            textView.setText(info);
+        } else {
+            view.findViewById(R.id.card_set_row).setVisibility(View.GONE);
+        }
+
+        info = mCard.getPlayerClass();
+        if (info != null) {
+            textView = (TextView) view.findViewById(R.id.card_class_text_view);
+            textView.setText(info);
+        } else {
+            view.findViewById(R.id.card_class_row).setVisibility(View.GONE);
+        }
+
+        info = mCard.getType();
+        if (info != null) {
+            textView = (TextView) view.findViewById(R.id.card_type_text_view);
+            textView.setText(info);
+        } else {
+            view.findViewById(R.id.card_type_row).setVisibility(View.GONE);
+        }
+
+        info = mCard.getRarity();
+        if (info != null) {
+            textView = (TextView) view.findViewById(R.id.card_rarity_text_view);
+            textView.setText(info);
+        } else {
+            view.findViewById(R.id.card_rarity_row).setVisibility(View.GONE);
+        }
+
+        info = mCard.getRace();
+        if (info != null) {
+            textView = (TextView) view.findViewById(R.id.card_race_text_view);
+            textView.setText(info);
+        } else {
+            view.findViewById(R.id.card_race_row).setVisibility(View.GONE);
+        }
+
+        info = mCard.getHowToGetReg();
+        if (info != null) {
+            textView = (TextView) view.findViewById(R.id.card_how_to_get_text_view);
+            textView.setText(info);
+        } else {
+            view.findViewById(R.id.how_to_get_row).setVisibility(View.GONE);
+        }
+
+        info = mCard.getHowToGetGold();
+        if (info != null) {
+            textView = (TextView) view.findViewById(R.id.card_how_to_get_gold_text_view);
+            textView.setText(mCard.getHowToGetGold());
+        } else {
+            view.findViewById(R.id.how_to_get_gold_row).setVisibility(View.GONE);
+        }
 
         return view;
     }

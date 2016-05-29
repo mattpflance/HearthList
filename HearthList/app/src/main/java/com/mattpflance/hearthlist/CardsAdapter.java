@@ -4,7 +4,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
@@ -15,15 +14,15 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.mattpflance.hearthlist.models.Card;
 
 import java.io.ByteArrayOutputStream;
-import java.util.concurrent.ExecutionException;
 
 /**
  * Creates a list of cards from a cursor to a RecyclerView
@@ -31,9 +30,9 @@ import java.util.concurrent.ExecutionException;
 public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.CardsAdapterViewHolder> {
 
     private Cursor mCursor;
-    final private Context mContext;
-    final private CardsAdapterOnClickHandler mClickHandler;
-    final private View mEmptyView;
+    private final Context mContext;
+    private final CardsAdapterOnClickHandler mClickHandler;
+    private final View mEmptyView;
 
     /**
      * Cache of the children views for a Card list item.
@@ -81,11 +80,13 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.CardsAdapter
         void onClick(Cursor cursor);
     }
 
+
     public CardsAdapter(Context context, CardsAdapterOnClickHandler onClickHandler, View emptyView) {
         mContext = context;
         mClickHandler = onClickHandler;
         mEmptyView = emptyView;
     }
+
 
     @Override
     public CardsAdapterViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
@@ -106,34 +107,40 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.CardsAdapter
         // Load card image
         String imagePath = mCursor.getString(Card.COL_REG_IMG_URL);
 
-        Glide.with(mContext)
-                .load(imagePath)
-                // TODO: Add placeholder for errors
-                .centerCrop()
-                .crossFade()
-                // Load from internal storage
-                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                .into(cardsAdapterVh.mCardView);
+        // TODO Resize Bitmap
+        if (imagePath != null) {
+            Glide.with(mContext)
+                    .load(imagePath)
+                    .centerCrop()
+                    .crossFade()
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into(cardsAdapterVh.mCardView);
+        }
 
         // Give the card a background gradient based on class
-        setBackgroundToView(cardsAdapterVh.mCardDetailsLayout,
-                mCursor.getString(Card.COL_CLASS).toLowerCase());
+        String playerClass = mCursor.getString(Card.COL_CLASS);
+        if (playerClass != null) {
+            setBackgroundToView(cardsAdapterVh.mCardDetailsLayout, playerClass.toLowerCase());
+        }
 
         // Load mana cost
         String text = "" + mCursor.getInt(Card.COL_COST);
         cardsAdapterVh.mManaTextView.setText(text);
 
         // Determine which icons to show for attack and health
-        String typeLower = mCursor.getString(Card.COL_TYPE).toLowerCase();
+        String cardType = mCursor.getString(Card.COL_TYPE);
         int attackId = -1;
         int healthId = -1;
 
-        if (typeLower.equals("minion")) {
-            attackId = R.drawable.ic_minion_attack;
-            healthId = R.drawable.ic_minion_health;
-        } else if (typeLower.equals("weapon")) {
-            attackId = R.drawable.ic_weapon_attack;
-            healthId = R.drawable.ic_weapon_health;
+        if (cardType != null) {
+            String typeLower = cardType.toLowerCase();
+            if (typeLower.equals("minion")) {
+                attackId = R.drawable.ic_minion_attack;
+                healthId = R.drawable.ic_minion_health;
+            } else if (typeLower.equals("weapon")) {
+                attackId = R.drawable.ic_weapon_attack;
+                healthId = R.drawable.ic_weapon_health;
+            }
         }
 
         if (attackId == -1 && healthId == -1) {
@@ -161,8 +168,10 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.CardsAdapter
         setCardRarity(cardsAdapterVh.mRarityView);
 
         // Set card text
-        cardsAdapterVh.mCardDescView
-                .setText(Html.fromHtml(mCursor.getString(Card.COL_TEXT)));
+        String cardText = mCursor.getString(Card.COL_TEXT);
+        if (cardText != null) {
+            cardsAdapterVh.mCardDescView.setText(Html.fromHtml(cardText));
+        }
     }
 
     @Override
