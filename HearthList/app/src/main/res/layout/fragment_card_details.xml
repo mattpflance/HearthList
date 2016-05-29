@@ -27,6 +27,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
+                <!-- Card Image -->
                 <ImageView
                     android:id="@+id/card_image"
                     android:layout_gravity="center_horizontal"
@@ -34,20 +35,51 @@
                     android:layout_height="@dimen/card_image_height"
                     android:contentDescription="@string/card_desc" />
 
-                <TextView
-                    android:id="@+id/artist"
+                <!-- Image Buttons -->
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal">
+
+                    <Button
+                        android:id="@+id/reg_image_button"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="@string/reg_image_text"/>
+
+                    <Button
+                        android:id="@+id/gold_image_button"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="@string/gold_image_text"/>
+
+                </LinearLayout>
+
+                <!-- Layout for Card Details -->
+                <LinearLayout
+                    android:orientation="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center" />
+                    android:background="#cdcdcb">
 
-                <TextView
-                    android:id="@+id/flavor_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="20dp"
-                    android:textStyle="italic|bold"
-                    android:gravity="center" />
+                    <TextView
+                        android:id="@+id/artist"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center" />
 
+                    <TextView
+                        android:id="@+id/flavor_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="20dp"
+                        android:textStyle="italic|bold"
+                        android:gravity="center" />
+
+                </LinearLayout>
 
             </LinearLayout>
         </android.support.v7.widget.CardView>

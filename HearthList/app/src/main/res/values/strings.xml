@@ -26,5 +26,7 @@
     <!-- Card Detail -->
     <string name="artist_text">Card art by <xliff:g name="artist">%1$s</xliff:g></string>
     <string name="flavor_text">\"%1$s\"</string>
+    <string name="reg_image_text">Normal</string>
+    <string name="gold_image_text">Gold</string>
 
 </resources>
