@@ -24,9 +24,16 @@
     <string name="card_download_key" translatable="false">com.mattpflance.hearthlist.CARD_DOWN_KEY</string>
 
     <!-- Card Detail -->
-    <string name="artist_text">Card art by <xliff:g name="artist">%1$s</xliff:g></string>
-    <string name="flavor_text">\"%1$s\"</string>
     <string name="reg_image_text">Normal</string>
     <string name="gold_image_text">Gold</string>
+    <string name="artist_text">Card art by <xliff:g name="artist">%1$s</xliff:g></string>
+    <string name="flavor_text">\"%1$s\"</string>
+    <string name="card_set_text">Card Set</string>
+    <string name="card_class_text">Class</string>
+    <string name="card_type_text">Type</string>
+    <string name="card_rarity_text">Rarity</string>
+    <string name="card_race_text">Race</string>
+    <string name="card_how_to_get_text">How To Get</string>
+    <string name="card_how_to_get_gold_text">How To Get Gold</string>
 
 </resources>

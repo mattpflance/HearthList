@@ -58,26 +58,225 @@
 
                 </LinearLayout>
 
-                <!-- Layout for Card Details -->
+                <!-- Card Details -->
                 <LinearLayout
                     android:orientation="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="#cdcdcb">
+                    android:layout_margin="12dp" >
 
-                    <TextView
-                        android:id="@+id/artist"
+                    <!-- Card Set Info -->
+                    <LinearLayout
+                        android:id="@+id/card_set_row"
+                        android:orientation="horizontal"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="center" />
+                        android:background="#b4b4b1">
 
-                    <TextView
-                        android:id="@+id/flavor_text"
+                        <TextView
+                            android:layout_width="@dimen/detail_name_width"
+                            android:layout_height="wrap_content"
+                            android:text="@string/card_set_text"
+                            style="@style/card_detail_text" />
+
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="match_parent"
+                            android:background="@color/black"/>
+
+                        <TextView
+                            android:id="@+id/card_set_text_view"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            style="@style/card_detail_text" />
+
+                    </LinearLayout>
+
+                    <!-- Card Class Info -->
+                    <LinearLayout
+                        android:id="@+id/card_class_row"
+                        android:orientation="horizontal"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:padding="20dp"
-                        android:textStyle="italic|bold"
-                        android:gravity="center" />
+                        android:background="#b4b4b1">
+
+                        <TextView
+                            android:layout_width="@dimen/detail_name_width"
+                            android:layout_height="wrap_content"
+                            android:text="@string/card_class_text"
+                            style="@style/card_detail_text" />
+
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="match_parent"
+                            android:background="@color/black"/>
+
+                        <TextView
+                            android:id="@+id/card_class_text_view"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            style="@style/card_detail_text" />
+
+                    </LinearLayout>
+
+                    <!-- Card Type Info -->
+                    <LinearLayout
+                        android:id="@+id/card_type_row"
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="#b4b4b1">
+
+                        <TextView
+                            android:layout_width="@dimen/detail_name_width"
+                            android:layout_height="wrap_content"
+                            android:text="@string/card_type_text"
+                            style="@style/card_detail_text" />
+
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="match_parent"
+                            android:background="@color/black"/>
+
+                        <TextView
+                            android:id="@+id/card_type_text_view"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            style="@style/card_detail_text" />
+
+                    </LinearLayout>
+
+                    <!-- Card Rarity Info -->
+                    <LinearLayout
+                        android:id="@+id/card_rarity_row"
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="#b4b4b1">
+
+                        <TextView
+                            android:layout_width="@dimen/detail_name_width"
+                            android:layout_height="wrap_content"
+                            android:text="@string/card_rarity_text"
+                            style="@style/card_detail_text" />
+
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="match_parent"
+                            android:background="@color/black"/>
+
+                        <TextView
+                            android:id="@+id/card_rarity_text_view"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            style="@style/card_detail_text" />
+
+                    </LinearLayout>
+
+                    <!-- Card Race Info -->
+                    <LinearLayout
+                        android:id="@+id/card_race_row"
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="#b4b4b1">
+
+                        <TextView
+                            android:layout_width="@dimen/detail_name_width"
+                            android:layout_height="wrap_content"
+                            android:text="@string/card_race_text"
+                            style="@style/card_detail_text" />
+
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="match_parent"
+                            android:background="@color/black"/>
+
+                        <TextView
+                            android:id="@+id/card_race_text_view"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            style="@style/card_detail_text" />
+
+                    </LinearLayout>
+
+                    <!-- How To Get Regular Info -->
+                    <LinearLayout
+                        android:id="@+id/how_to_get_row"
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="#b4b4b1">
+
+                        <TextView
+                            android:layout_width="@dimen/detail_name_width"
+                            android:layout_height="wrap_content"
+                            android:text="@string/card_how_to_get_text"
+                            style="@style/card_detail_text" />
+
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="match_parent"
+                            android:background="@color/black"/>
+
+                        <TextView
+                            android:id="@+id/card_how_to_get_text_view"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            style="@style/card_detail_text" />
+
+                    </LinearLayout>
+
+                    <!-- How To Get Gold Info -->
+                    <LinearLayout
+                        android:id="@+id/how_to_get_gold_row"
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="#b4b4b1">
+
+                        <TextView
+                            android:layout_width="@dimen/detail_name_width"
+                            android:layout_height="wrap_content"
+                            android:text="@string/card_how_to_get_gold_text"
+                            style="@style/card_detail_text" />
+
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="match_parent"
+                            android:background="@color/black"/>
+
+                        <TextView
+                            android:id="@+id/card_how_to_get_gold_text_view"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            style="@style/card_detail_text" />
+
+                    </LinearLayout>
+
+                    <!-- Layout for Card Art -->
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="#cdcdcb">
+
+                        <TextView
+                            android:id="@+id/artist"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:textSize="16sp"
+                            android:paddingTop="20dp" />
+
+                        <TextView
+                            android:id="@+id/flavor_text"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            style="@style/card_flavor_text" />
+
+                    </LinearLayout>
 
                 </LinearLayout>
 

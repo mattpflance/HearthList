@@ -8,4 +8,6 @@
     <dimen name="card_image_width">300dp</dimen>
     <dimen name="card_image_height">400dp</dimen>
 
+    <dimen name="detail_name_width">140dp</dimen>
+
 </resources>
