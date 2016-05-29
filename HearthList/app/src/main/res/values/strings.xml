@@ -27,7 +27,7 @@
     <string name="reg_image_text">Normal</string>
     <string name="gold_image_text">Gold</string>
     <string name="artist_text">Card art by <xliff:g name="artist">%1$s</xliff:g></string>
-    <string name="flavor_text">\"%1$s\"</string>
+    <string name="flavor_text">%1$s</string>
     <string name="card_set_text">Card Set</string>
     <string name="card_class_text">Class</string>
     <string name="card_type_text">Type</string>
