@@ -145,5 +145,9 @@ public class Card implements Parcelable {
         }
     };
 
-    public String getRegImageURL() { return mRegImageUrl; }
+    public String getName() { return mCardName; }
+    public String getArtist() { return mArtist; }
+    public String getFlavorText() { return mFlavorText; }
+    public String getRegImageUrl() { return mRegImageUrl; }
+    public String getGoldImageUrl() { return mGoldImageUrl; }
 }
