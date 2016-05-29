@@ -39,7 +39,7 @@ public class CardDetailsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mCard = getArguments().getParcelable("CARD");
+            mCard = getArguments().getParcelable(CardDetailsActivity.CARD_ARG_ID);
         }
     }
 

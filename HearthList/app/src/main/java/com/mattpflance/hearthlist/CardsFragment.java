@@ -52,7 +52,9 @@ public class CardsFragment extends Fragment implements LoaderManager.LoaderCallb
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.cards_recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mRecyclerView.setHasFixedSize(true);
         ((SimpleItemAnimator) mRecyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
+
         mEmptyView = (TextView) view.findViewById(R.id.cards_recycler_empty_view);
 
         mCardsAdapter = new CardsAdapter(getActivity(), new CardsAdapter.CardsAdapterOnClickHandler() {
@@ -60,7 +62,7 @@ public class CardsFragment extends Fragment implements LoaderManager.LoaderCallb
             public void onClick(Cursor cursor) {
                 Intent intent = new Intent(getActivity(), CardDetailsActivity.class);
                 Card card = (cursor != null) ? new Card(cursor) : null;
-                intent.putExtra("CARD", card);
+                intent.putExtra(CardDetailsActivity.CARD_ARG_ID, card);
                 startActivity(intent);
             }
         }, mEmptyView);

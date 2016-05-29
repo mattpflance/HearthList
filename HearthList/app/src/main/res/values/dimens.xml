@@ -17,7 +17,4 @@
 
     <dimen name="recyclerview_top_margin">100dp</dimen>
 
-    <!-- Card Details Dimensions -->
-    <dimen name="details_card_view_padding">20dp</dimen>
-
 </resources>

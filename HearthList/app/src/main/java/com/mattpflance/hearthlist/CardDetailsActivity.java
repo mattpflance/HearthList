@@ -13,6 +13,8 @@ import com.mattpflance.hearthlist.models.Card;
 
 public class CardDetailsActivity extends AppCompatActivity {
 
+    public static String CARD_ARG_ID = "CARD_ID";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,10 +33,10 @@ public class CardDetailsActivity extends AppCompatActivity {
             CardDetailsFragment cardDetailsFragment = CardDetailsFragment.newInstance();
 
             // Create a Card
-            Card card = getIntent().getParcelableExtra("CARD");
+            Card card = getIntent().getParcelableExtra(CARD_ARG_ID);
 
             Bundle bundle = new Bundle();
-            bundle.putParcelable("CARD", card);
+            bundle.putParcelable(CARD_ARG_ID, card);
 
             // In case this activity was started with special instructions from an
             // Intent, pass the Intent's extras to the fragment as arguments
