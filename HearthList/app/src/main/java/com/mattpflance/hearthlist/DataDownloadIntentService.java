@@ -78,13 +78,6 @@ public class DataDownloadIntentService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-
-        // Store a boolean (for now) so we do not make a second API call after download starts
-        SharedPreferences prefs = getSharedPreferences(null, MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putBoolean(getString(R.string.card_download_key), true);
-        editor.commit();
-
         long startTime = System.currentTimeMillis();
         long endTime = 0;
 
@@ -117,7 +110,6 @@ public class DataDownloadIntentService extends IntentService {
 
         downloadCardData(cardSets);
         endTime = System.currentTimeMillis() - startTime;
-        startTime = System.currentTimeMillis();
         Log.e("CardData", "Finished downloading in " + endTime + " ms.");
 
         // Get cursor
@@ -125,16 +117,23 @@ public class DataDownloadIntentService extends IntentService {
         mCursor = getContentResolver().query(HearthListContract.CardEntry.CONTENT_URI,
                 URL_COLUMNS, null, null, sortOrder);
 
+        startTime = System.currentTimeMillis();
         downloadImages(IMAGE_TYPE_REGULAR);
         endTime = System.currentTimeMillis() - startTime;
-        //startTime = System.currentTimeMillis();
         Log.e("RegImages", "Finished downloading in " + endTime + " ms.");
 
-//        downloadImages(IMAGE_TYPE_GOLD);
-//        endTime = System.currentTimeMillis() - startTime;
-//        Log.e("GoldImages", "Finished downloading in " + endTime + " ms.");
+        startTime = System.currentTimeMillis();
+        downloadImages(IMAGE_TYPE_GOLD);
+        endTime = System.currentTimeMillis() - startTime;
+        Log.e("GoldImages", "Finished downloading in " + endTime + " ms.");
 
         mCursor.close();
+
+        // Store a boolean (for now) so we do not make a second API call after download starts
+        SharedPreferences prefs = getSharedPreferences(null, MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putBoolean(getString(R.string.card_download_key), true);
+        editor.commit();
     }
 
     private void downloadCardData(JSONObject cardSets) {
@@ -305,25 +304,15 @@ public class DataDownloadIntentService extends IntentService {
     }
 
     private void downloadImages(int imageType) {
-
-        // cards.card_name = ?
-        final String sCardIdSelection =
-                HearthListContract.CardEntry.TABLE_NAME +
-                        "." + HearthListContract.CardEntry._ID + " = ? ";
-
         // Reset the cursor to first position
         mCursor.moveToFirst();
 
         do {
-            // TODO: Grab dimensions from dimen.xml for different screen support
-            int width = Utility.dpToPx(this, 300);
-            int height = Utility.dpToPx(this, 400);
-
             Glide.with(this)
                     // Url becomes name of the file
                     .load((imageType == IMAGE_TYPE_REGULAR) ?
                             mCursor.getString(COLUMN_REG_URL) : mCursor.getString(COLUMN_GOLD_URL))
-                    .downloadOnly(width, height);
+                    .downloadOnly(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL);
 
         } while (mCursor.moveToNext());
     }
