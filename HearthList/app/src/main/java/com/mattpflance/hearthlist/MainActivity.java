@@ -8,6 +8,9 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.support.v7.app.AppCompatActivity;
@@ -17,10 +20,7 @@ import android.view.MenuItem;
 
 public class MainActivity extends AppCompatActivity {
 
-    private PagerAdapter mPagerAdapter;
-
-    private TabLayout mTabLayout;
-    private ViewPager mViewPager;
+    public static TabLayout TabLayout;
     private PagerFragment mPagerFragment;
 
     @Override
@@ -38,17 +38,17 @@ public class MainActivity extends AppCompatActivity {
             startService(new Intent(this, DataDownloadIntentService.class));
         }
 
-        mPagerFragment = (PagerFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.view_pager_fragment);
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.view_pager_fragment_container);
+        if (fragment == null) {
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            mPagerFragment = PagerFragment.newInstance();
+            fragmentTransaction.replace(R.id.view_pager_fragment_container, mPagerFragment);
+            fragmentTransaction.commit();
+        }
 
-        mPagerAdapter = new PagerAdapter(getSupportFragmentManager(), this);
-
-        mViewPager = (ViewPager) mPagerFragment.getView();
-        mViewPager.setAdapter(mPagerAdapter);
-
-        mTabLayout = (TabLayout) findViewById(R.id.tab_layout);
-        mTabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
-        mTabLayout.setupWithViewPager(mViewPager);
+        TabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        TabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
     }
 
     @Override
