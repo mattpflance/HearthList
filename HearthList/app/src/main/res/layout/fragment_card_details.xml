@@ -5,15 +5,15 @@
     android:layout_height="match_parent"
     tools:context="com.mattpflance.hearthlist.CardDetailsFragment">
 
+    <!-- Used for padding around ScrollView to show the entire card -->
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="12dp">
+        android:padding="@dimen/card_view_padding">
 
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
             android:layout_marginTop="@dimen/details_card_view_vert_margin"
             android:layout_marginBottom="@dimen/details_card_view_vert_margin"
             android:layout_marginRight="@dimen/details_card_view_horiz_margin"
@@ -23,20 +23,33 @@
             app:cardElevation="4dp">
 
             <LinearLayout
-                android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
                 <ImageView
                     android:id="@+id/card_image"
                     android:layout_gravity="center_horizontal"
-                    android:layout_width="300dp"
-                    android:layout_height="400dp"
+                    android:layout_width="@dimen/card_image_width"
+                    android:layout_height="@dimen/card_image_height"
                     android:contentDescription="@string/card_desc" />
 
+                <TextView
+                    android:id="@+id/artist"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center" />
+
+                <TextView
+                    android:id="@+id/flavor_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="20dp"
+                    android:textStyle="italic|bold"
+                    android:gravity="center" />
+
+
             </LinearLayout>
-
         </android.support.v7.widget.CardView>
-
     </FrameLayout>
 </ScrollView>

@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:xliff="http://schemas.android.com/tools">
     <string name="app_name">HearthList</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -22,5 +22,9 @@
 
     <!-- SharedPreferences keys -->
     <string name="card_download_key" translatable="false">com.mattpflance.hearthlist.CARD_DOWN_KEY</string>
+
+    <!-- Card Detail -->
+    <string name="artist_text">Card art by <xliff:g name="artist">%1$s</xliff:g></string>
+    <string name="flavor_text">\"%1$s\"</string>
 
 </resources>

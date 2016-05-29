@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <dimen name="details_card_view_vert_margin">20dp</dimen>
-    <dimen name="details_card_view_horiz_margin">20dp</dimen>
+    <dimen name="card_view_padding">0dp</dimen>
+    <dimen name="details_card_view_vert_margin">0dp</dimen>
+    <dimen name="details_card_view_horiz_margin">0dp</dimen>
+
+    <dimen name="card_image_width">300dp</dimen>
+    <dimen name="card_image_height">400dp</dimen>
 
 </resources>

@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <dimen name="card_view_padding">12dp</dimen>
+    <dimen name="details_card_view_vert_margin">12dp</dimen>
     <dimen name="details_card_view_horiz_margin">80dp</dimen>
 
 </resources>
