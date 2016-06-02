@@ -4,4 +4,6 @@
     <!-- Layout to display -->
     <item name="main_layout" type="layout">@layout/content_main_phone</item>
 
+    <dimen name="cards_horz_margin">0dp</dimen>
+
 </resources>

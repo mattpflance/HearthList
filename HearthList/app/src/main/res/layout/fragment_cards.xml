@@ -6,6 +6,10 @@
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/cards_recycler_view"
+        android:layout_marginLeft="@dimen/cards_horz_margin"
+        android:layout_marginStart="@dimen/cards_horz_margin"
+        android:layout_marginRight="@dimen/cards_horz_margin"
+        android:layout_marginEnd="@dimen/cards_horz_margin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
