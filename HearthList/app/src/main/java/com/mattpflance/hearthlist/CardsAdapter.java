@@ -3,8 +3,8 @@ package com.mattpflance.hearthlist;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.speech.tts.UtteranceProgressListener;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
@@ -18,11 +18,11 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
+import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
+import com.bumptech.glide.load.resource.bitmap.TransformationUtils;
 import com.mattpflance.hearthlist.models.Card;
 
-import java.io.ByteArrayOutputStream;
 
 /**
  * Creates a list of cards from a cursor to a RecyclerView
@@ -101,7 +101,7 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.CardsAdapter
     }
 
     @Override
-    public void onBindViewHolder(CardsAdapterViewHolder cardsAdapterVh, int position) {
+    public void onBindViewHolder(final CardsAdapterViewHolder cardsAdapterVh, int position) {
         mCursor.moveToPosition(position);
 
         // Load card image
@@ -111,16 +111,15 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.CardsAdapter
         if (imagePath != null) {
             Glide.with(mContext)
                     .load(imagePath)
-                    .centerCrop()
-                    .crossFade()
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .transform(new CardsAdapterImageTransformation(mContext))
+                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                     .into(cardsAdapterVh.mCardView);
         }
 
         // Give the card a background gradient based on class
         String playerClass = mCursor.getString(Card.COL_CLASS);
         if (playerClass != null) {
-            setBackgroundToView(cardsAdapterVh.mCardDetailsLayout, playerClass.toLowerCase());
+            //setBackgroundToView(cardsAdapterVh.mCardDetailsLayout, playerClass.toLowerCase());
         }
 
         // Load mana cost
@@ -192,17 +191,6 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.CardsAdapter
         mEmptyView.setVisibility(getItemCount() == 0 ? View.VISIBLE : View.GONE);
     }
 
-    public Cursor getCursor() {
-        return mCursor;
-    }
-
-    public void selectView(RecyclerView.ViewHolder viewHolder) {
-        if ( viewHolder instanceof CardsAdapterViewHolder ) {
-            CardsAdapterViewHolder vfh = (CardsAdapterViewHolder)viewHolder;
-            vfh.onClick(vfh.itemView);
-        }
-    }
-
     private void setCardRarity(View view) {
         String rarity = mCursor.getString(Card.COL_RARITY).toLowerCase();
         int colorId;
@@ -272,5 +260,29 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.CardsAdapter
 
         // Set background
         backgroundView.setBackground(drawable);
+    }
+
+
+    private static class CardsAdapterImageTransformation extends BitmapTransformation {
+
+        private Context mContext;
+
+        public CardsAdapterImageTransformation(Context context) {
+            super(context);
+            mContext = context;
+        }
+
+        @Override
+        protected Bitmap transform(BitmapPool pool, Bitmap toTransform, int outWidth, int outHeight) {
+            int cropStart = Utility.dpToPx(mContext, 33);
+            int length = Utility.dpToPx(mContext, 38);
+            return Bitmap.createBitmap(toTransform, cropStart, cropStart, length, length);
+        }
+
+        @Override
+        public String getId() {
+            // Return some id that uniquely identifies your transformation.
+            return "com.mattpflance.hearthlist.CardsAdapterImageTransformation";
+        }
     }
 }
