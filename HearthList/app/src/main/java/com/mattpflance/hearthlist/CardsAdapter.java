@@ -3,8 +3,6 @@ package com.mattpflance.hearthlist;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
-import android.speech.tts.UtteranceProgressListener;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
@@ -20,7 +18,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
 import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
-import com.bumptech.glide.load.resource.bitmap.TransformationUtils;
 import com.mattpflance.hearthlist.models.Card;
 
 
@@ -46,7 +43,7 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.CardsAdapter
         public final ImageView mHealthIcon;
         public final TextView mAttackTextView;
         public final TextView mHealthTextView;
-        public final View mRarityView;
+        public final View mClassView;
         public final LinearLayout mCardDetailsLayout;
         public final TextView mCardNameView;
         public final TextView mCardDescView;
@@ -61,7 +58,7 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.CardsAdapter
             mHealthIcon = (ImageView) view.findViewById(R.id.health_icon);
             mAttackTextView = (TextView) view.findViewById(R.id.attack_textview);
             mHealthTextView = (TextView) view.findViewById(R.id.health_textview);
-            mRarityView = view.findViewById(R.id.rarity_view);
+            mClassView = view.findViewById(R.id.class_color_view);
             mCardDetailsLayout = (LinearLayout) view.findViewById(R.id.card_details);
             mCardNameView = (TextView) view.findViewById(R.id.card_name_view);
             mCardDescView = (TextView) view.findViewById(R.id.card_text_view);
@@ -104,22 +101,17 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.CardsAdapter
     public void onBindViewHolder(final CardsAdapterViewHolder cardsAdapterVh, int position) {
         mCursor.moveToPosition(position);
 
+        // Give the card a background gradient based on class
+        setClassToView(cardsAdapterVh.mClassView);
+
         // Load card image
         String imagePath = mCursor.getString(Card.COL_REG_IMG_URL);
-
-        // TODO Resize Bitmap
         if (imagePath != null) {
             Glide.with(mContext)
                     .load(imagePath)
-                    .transform(new CardsAdapterImageTransformation(mContext))
+                    .transform(new CardsAdapterImageTransformation(mContext)) // Crops image
                     .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                     .into(cardsAdapterVh.mCardView);
-        }
-
-        // Give the card a background gradient based on class
-        String playerClass = mCursor.getString(Card.COL_CLASS);
-        if (playerClass != null) {
-            //setBackgroundToView(cardsAdapterVh.mCardDetailsLayout, playerClass.toLowerCase());
         }
 
         // Load mana cost
@@ -163,8 +155,8 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.CardsAdapter
         // Set card name
         cardsAdapterVh.mCardNameView.setText(mCursor.getString(Card.COL_NAME));
 
-        // Set rarity view
-        setCardRarity(cardsAdapterVh.mRarityView);
+        // Set rarity color to card name
+        setCardRarity(cardsAdapterVh.mCardNameView);
 
         // Set card text
         String cardText = mCursor.getString(Card.COL_TEXT);
@@ -191,7 +183,7 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.CardsAdapter
         mEmptyView.setVisibility(getItemCount() == 0 ? View.VISIBLE : View.GONE);
     }
 
-    private void setCardRarity(View view) {
+    private void setCardRarity(TextView textView) {
         String rarity = mCursor.getString(Card.COL_RARITY).toLowerCase();
         int colorId;
 
@@ -214,52 +206,49 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.CardsAdapter
         }
 
         if (colorId != -1) {
-            view.setVisibility(View.VISIBLE);
-            view.setBackgroundColor(colorId);
-        } else {
-            view.setVisibility(View.GONE);
+            textView.setTextColor(colorId);
         }
     }
 
-    private void setBackgroundToView(LinearLayout backgroundView, String playerClass) {
-
-        Drawable drawable;
+    private void setClassToView(View view) {
+        String playerClass = mCursor.getString(Card.COL_CLASS).toLowerCase();
+        int colorId;
 
         switch (playerClass) {
             case "warrior":
-                drawable = ContextCompat.getDrawable(mContext, R.drawable.gradient_warrior);
+                colorId = ContextCompat.getColor(mContext, R.color.warriorColor);
                 break;
             case "shaman":
-                drawable = ContextCompat.getDrawable(mContext, R.drawable.gradient_shaman);
+                colorId = ContextCompat.getColor(mContext, R.color.shamanColor);
                 break;
             case "rogue":
-                drawable = ContextCompat.getDrawable(mContext, R.drawable.gradient_rogue);
+                colorId = ContextCompat.getColor(mContext, R.color.rogueColor);
                 break;
             case "paladin":
-                drawable = ContextCompat.getDrawable(mContext, R.drawable.gradient_paladin);
+                colorId = ContextCompat.getColor(mContext, R.color.paladinColor);
                 break;
             case "hunter":
-                drawable = ContextCompat.getDrawable(mContext, R.drawable.gradient_hunter);
+                colorId = ContextCompat.getColor(mContext, R.color.hunterColor);
                 break;
             case "druid":
-                drawable = ContextCompat.getDrawable(mContext, R.drawable.gradient_druid);
+                colorId = ContextCompat.getColor(mContext, R.color.druidColor);
                 break;
             case "warlock":
-                drawable = ContextCompat.getDrawable(mContext, R.drawable.gradient_warlock);
+                colorId = ContextCompat.getColor(mContext, R.color.warlockColor);
                 break;
             case "mage":
-                drawable = ContextCompat.getDrawable(mContext, R.drawable.gradient_mage);
+                colorId = ContextCompat.getColor(mContext, R.color.mageColor);
                 break;
             case "priest":
-                drawable = ContextCompat.getDrawable(mContext, R.drawable.gradient_priest);
+                colorId = ContextCompat.getColor(mContext, R.color.priestColor);
                 break;
             default:
-                drawable = ContextCompat.getDrawable(mContext, R.drawable.gradient_neutral);
+                colorId = ContextCompat.getColor(mContext, R.color.neutralColor);
                 break;
         }
 
         // Set background
-        backgroundView.setBackground(drawable);
+        view.setBackgroundColor(colorId);
     }
 
 
