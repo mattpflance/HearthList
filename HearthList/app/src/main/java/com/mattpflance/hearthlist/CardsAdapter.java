@@ -160,9 +160,7 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.CardsAdapter
 
         // Set card text
         String cardText = mCursor.getString(Card.COL_TEXT);
-        if (cardText != null) {
-            cardsAdapterVh.mCardDescView.setText(Html.fromHtml(cardText));
-        }
+        cardsAdapterVh.mCardDescView.setText(cardText == null ? null : Html.fromHtml(cardText));
     }
 
     @Override
@@ -249,7 +247,6 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.CardsAdapter
         view.setBackgroundColor(colorId);
     }
 
-
     private static class CardsAdapterImageTransformation extends BitmapTransformation {
 
         private Context mContext;
@@ -261,9 +258,10 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.CardsAdapter
 
         @Override
         protected Bitmap transform(BitmapPool pool, Bitmap toTransform, int outWidth, int outHeight) {
-            int cropStart = Utility.dpToPx(mContext, 33);
-            int length = Utility.dpToPx(mContext, 38);
-            return Bitmap.createBitmap(toTransform, cropStart, cropStart, length, length);
+            int cropStartLeft = Utility.dpToPx(mContext, 31);
+            int cropStartTop = Utility.dpToPx(mContext, 35);
+            int length = Utility.dpToPx(mContext, 40);
+            return Bitmap.createBitmap(toTransform, cropStartLeft, cropStartTop, length, length);
         }
 
         @Override
