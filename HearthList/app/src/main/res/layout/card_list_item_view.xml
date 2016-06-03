@@ -113,7 +113,12 @@
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/inner_text_padding">
+                android:paddingLeft="@dimen/horz_inner_text_padding"
+                android:paddingStart="@dimen/horz_inner_text_padding"
+                android:paddingRight="@dimen/horz_inner_text_padding"
+                android:paddingEnd="@dimen/horz_inner_text_padding"
+                android:paddingBottom="@dimen/vert_inner_text_padding"
+                android:paddingTop="@dimen/vert_inner_text_padding">
 
                 <TextView
                     android:id="@+id/card_name_view"
