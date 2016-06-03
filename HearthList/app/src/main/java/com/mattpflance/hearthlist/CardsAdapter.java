@@ -259,7 +259,7 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.CardsAdapter
         @Override
         protected Bitmap transform(BitmapPool pool, Bitmap toTransform, int outWidth, int outHeight) {
             int cropStartLeft = Utility.dpToPx(mContext, 31);
-            int cropStartTop = Utility.dpToPx(mContext, 35);
+            int cropStartTop = Utility.dpToPx(mContext, 37);
             int length = Utility.dpToPx(mContext, 40);
             return Bitmap.createBitmap(toTransform, cropStartLeft, cropStartTop, length, length);
         }
