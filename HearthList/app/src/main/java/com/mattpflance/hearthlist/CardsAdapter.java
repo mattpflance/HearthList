@@ -201,13 +201,11 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.CardsAdapter
                 colorId = ContextCompat.getColor(mContext, R.color.legendary);
                 break;
             default:
-                colorId = -1;
+                colorId = ContextCompat.getColor(mContext, R.color.black);
                 break;
         }
 
-        if (colorId != -1) {
-            textView.setTextColor(colorId);
-        }
+        textView.setTextColor(colorId);
     }
 
     private void setClassToView(View view) {
