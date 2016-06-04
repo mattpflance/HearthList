@@ -1,0 +1,18 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:title="Mana Cost"
+        android:key="pref_key_storage_settings">
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="Class"
+        android:key="pref_key_storage_settings">
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="Card Set"
+        android:key="pref_key_storage_settings">
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="Mechanics"
+        android:key="pref_key_storage_settings">
+    </PreferenceCategory>
+</PreferenceScreen>

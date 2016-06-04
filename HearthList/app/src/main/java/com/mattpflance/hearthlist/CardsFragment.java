@@ -3,20 +3,24 @@ package com.mattpflance.hearthlist;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SimpleItemAnimator;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.mattpflance.hearthlist.data.HearthListContract;
 import com.mattpflance.hearthlist.models.Card;
+import com.mattpflance.hearthlist.settings.CardFiltersActivity;
 
 
 /**
@@ -24,11 +28,15 @@ import com.mattpflance.hearthlist.models.Card;
  */
 public class CardsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    private CardsAdapter mCardsAdapter;
-    private RecyclerView mRecyclerView;
-    private TextView mEmptyView;
+    private static final int UPDATE_CURSOR = 1;
 
     private static final int CARD_LOADER = 0;
+
+    private CardsAdapter mCardsAdapter;
+
+    private RecyclerView mRecyclerView;
+    private TextView mEmptyView;
+    private FloatingActionButton mFilterFab;
 
     public CardsFragment() {
     }
@@ -68,6 +76,17 @@ public class CardsFragment extends Fragment implements LoaderManager.LoaderCallb
         }, mEmptyView);
 
         mRecyclerView.setAdapter(mCardsAdapter);
+
+        mFilterFab = (FloatingActionButton) view.findViewById(R.id.cards_fab);
+        mFilterFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), CardFiltersActivity.class);
+//                Card card = (cursor != null) ? new Card(cursor) : null;
+//                intent.putExtra(CardDetailsActivity.CARD_ARG_ID, card);
+                startActivityForResult(intent, UPDATE_CURSOR);
+            }
+        });
 
         return view;
     }
