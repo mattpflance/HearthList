@@ -2,16 +2,12 @@ package com.mattpflance.hearthlist;
 
 import android.app.IntentService;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.util.Log;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.FutureTarget;
 import com.bumptech.glide.request.target.Target;
 import com.mattpflance.hearthlist.data.HearthListContract;
 
@@ -19,13 +15,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Vector;
-import java.util.concurrent.ExecutionException;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -134,13 +126,19 @@ public class DataDownloadIntentService extends IntentService {
         SharedPreferences prefs = getSharedPreferences(null, MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putBoolean(getString(R.string.card_download_key), true);
-        editor.commit();
+        editor.apply();
     }
 
     private void downloadCardData(JSONObject cardSets) {
 
         int numOfCardSets = cardSets.length();
         JSONArray cardSetNames = cardSets.names();
+
+        int minMana = 0;
+        int maxMana = 0;
+        HashSet<String> uniqueCardClasses = new HashSet<>();
+        HashSet<String> uniqueCardSets = new HashSet<>();
+        HashSet<String> uniqueMechanics = new HashSet<>();
 
         for (int i=0; i<numOfCardSets; i++) {
 
@@ -248,6 +246,12 @@ public class DataDownloadIntentService extends IntentService {
                     String mechanics = null;
                     try {
                         JSONArray mechanicsArr = card.getJSONArray(MHS_MECHANICS);
+                        for (int m = 0; m<mechanicsArr.length(); m++) {
+                            String mechanic = mechanicsArr.getJSONObject(m).getString(MHS_NAME);
+                            if (!mechanic.equals("InvisibleDeathrattle")) {
+                                uniqueMechanics.add(mechanic);
+                            }
+                        }
                         mechanics = mechanicsArr.toString();
                     } catch (JSONException e) { Log.i(LOG_TAG, "Card has no mechanics."); }
 
@@ -297,6 +301,13 @@ public class DataDownloadIntentService extends IntentService {
                     cardValues.put(HearthListContract.CardEntry.COLUMN_HOW_TO_GET_GOLD, HTGGold);
 
                     cVVector.add(cardValues);
+
+                    // Check for new min and max mana costs
+                    if (cost > maxMana) maxMana = cost;
+                    else if (cost < minMana) minMana = cost;
+
+                    uniqueCardSets.add(cardSetName);
+                    uniqueCardClasses.add(playerClass);
                 }
             }
 
@@ -306,6 +317,15 @@ public class DataDownloadIntentService extends IntentService {
                 getContentResolver().bulkInsert(HearthListContract.CardEntry.CONTENT_ITEM_URI, cvArray);
             }
         }
+        // Add filtering values to shared preferences
+        SharedPreferences prefs = getSharedPreferences(null, MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putInt(getString(R.string.min_mana_key), minMana);
+        editor.putInt(getString(R.string.max_mana_key), maxMana);
+        editor.putStringSet(getString(R.string.card_class_key), uniqueCardClasses);
+        editor.putStringSet(getString(R.string.card_sets_key), uniqueCardSets);
+        editor.putStringSet(getString(R.string.card_mechanics_key), uniqueMechanics);
+        editor.apply();
     }
 
     private void downloadImages(int imageType) {
