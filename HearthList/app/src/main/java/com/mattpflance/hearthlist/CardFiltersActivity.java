@@ -58,6 +58,7 @@ public class CardFiltersActivity extends AppCompatActivity {
             int length = classSet.size();
             String[] classArr = classSet.toArray(new String[length]);
             // TODO Add classes
+
         }
 
         // Card Sets
@@ -66,6 +67,7 @@ public class CardFiltersActivity extends AppCompatActivity {
             int length = cardSet.size();
             String[] cardSetArr = cardSet.toArray(new String[length]);
             // TODO Add card sets
+
         }
 
         // Mechanics
@@ -74,6 +76,7 @@ public class CardFiltersActivity extends AppCompatActivity {
             int length = mechanicsSet.size();
             String[] mechanicsArr = mechanicsSet.toArray(new String[length]);
             // TODO Add mechanics
+
         }
 
         updateActivityResult();
