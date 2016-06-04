@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Vector;
 import java.util.concurrent.ExecutionException;
 
@@ -244,8 +245,11 @@ public class DataDownloadIntentService extends IntentService {
                         artist = card.getString(MHS_ARTIST);
                     } catch (JSONException e) { Log.i(LOG_TAG, "Card has no artist."); }
 
-                    // TODO mechanics
-                    //String mechanics = card.getJSONArray(MHS_MECHANICS);
+                    String mechanics = null;
+                    try {
+                        JSONArray mechanicsArr = card.getJSONArray(MHS_MECHANICS);
+                        mechanics = mechanicsArr.toString();
+                    } catch (JSONException e) { Log.i(LOG_TAG, "Card has no mechanics."); }
 
                     // Some cards have a HowToGet field
                     String HTG = null;
@@ -286,6 +290,7 @@ public class DataDownloadIntentService extends IntentService {
                     cardValues.put(HearthListContract.CardEntry.COLUMN_TEXT, text);
                     cardValues.put(HearthListContract.CardEntry.COLUMN_FLAVOR, flavor);
                     cardValues.put(HearthListContract.CardEntry.COLUMN_ARTIST, artist);
+                    cardValues.put(HearthListContract.CardEntry.COLUMN_MECHANICS, mechanics);
                     cardValues.put(HearthListContract.CardEntry.COLUMN_REG_IMG_URL, imageUrl);
                     cardValues.put(HearthListContract.CardEntry.COLUMN_GOLD_IMG_URL, goldImageUrl);
                     cardValues.put(HearthListContract.CardEntry.COLUMN_HOW_TO_GET, HTG);
