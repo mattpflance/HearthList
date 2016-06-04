@@ -1,6 +1,7 @@
 package com.mattpflance.hearthlist;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -23,10 +24,14 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-
         switch (position) {
             case CARDS_TAB:
-                if (mCardsFragment == null) mCardsFragment = CardsFragment.newInstance();
+                if (mCardsFragment == null) {
+                    SharedPreferences prefs = mContext.getSharedPreferences(null, Context.MODE_PRIVATE);
+                    int minMana = prefs.getInt(mContext.getString(R.string.min_mana_key), 0);
+                    int maxMana = prefs.getInt(mContext.getString(R.string.max_mana_key), 99);
+                    mCardsFragment = CardsFragment.newInstance(minMana, maxMana);
+                }
                 return mCardsFragment;
             case DECKS_TAB:
                 if (mDecksFragment == null) mDecksFragment = DecksFragment.newInstance();
@@ -34,7 +39,6 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
             default:
                 return null;
         }
-
     }
 
     @Override
@@ -45,7 +49,6 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
      */
     @Override
     public CharSequence getPageTitle(int position) {
-
         switch (position) {
             case CARDS_TAB:
                 return mContext.getString(R.string.tab_layout_cards);
@@ -54,6 +57,5 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
             default:
                 return mContext.getString(R.string.tab_layout_error);
         }
-
     }
 }

@@ -8,15 +8,16 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static TabLayout TabLayout;
-    private PagerFragment mPagerFragment;
+    private TabLayout mTabLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,17 +34,17 @@ public class MainActivity extends AppCompatActivity {
             startService(new Intent(this, DataDownloadIntentService.class));
         }
 
-        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.view_pager_fragment_container);
-        if (fragment == null) {
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            mPagerFragment = PagerFragment.newInstance();
-            fragmentTransaction.replace(R.id.view_pager_fragment_container, mPagerFragment);
-            fragmentTransaction.commit();
-        }
+        mTabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        mTabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
-        TabLayout = (TabLayout) findViewById(R.id.tab_layout);
-        TabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+        //View view = inflater.inflate(R.layout.fragment_pager, container, false);
+
+        ViewPager viewPager = (ViewPager) findViewById(R.id.view_pager);
+
+        PagerAdapter pagerAdapter = new PagerAdapter(getSupportFragmentManager(), this);
+        viewPager.setAdapter(pagerAdapter);
+
+        mTabLayout.setupWithViewPager(viewPager);
     }
 
     @Override

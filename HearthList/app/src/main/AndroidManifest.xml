@@ -22,7 +22,7 @@
         </activity>
         <activity android:name=".CardDetailsActivity" />
         <activity
-            android:name=".settings.CardFiltersActivity"
+            android:name=".CardFiltersActivity"
             android:label="@string/title_activity_card_filters"
             android:theme="@style/AppTheme.Dialog"/>
 
