@@ -83,14 +83,17 @@ public class HearthListProvider extends ContentProvider {
 
         /* We query all cards/decks when displaying data and never a single card or deck */
 
-        int numArgs = selectionArgs.length;
-        String filterSelection = sCardFiltersManaSelection +
-                // Class filter check
-                ((numArgs > 2 && !selectionArgs[2].equals("")) ?  " AND " + sCardFiltersClassSelection : "") +
-                // Card Set filter check
-                ((numArgs > 3 && !selectionArgs[3].equals("")) ? " AND " + sCardFiltersCardSetSelection : "") +
-                // Mechanics filter check
-                ((numArgs > 4 && !selectionArgs[4].equals("")) ? " AND " + sCardFiltersMechanicsSelection : "");
+        String filterSelection = null;
+        if (selectionArgs != null) {
+            int numArgs = selectionArgs.length;
+            filterSelection = sCardFiltersManaSelection +
+                    // Class filter check
+                    ((numArgs > 2 && selectionArgs[2] != null) ?  " AND " + sCardFiltersClassSelection : "") +
+                    // Card Set filter check
+                    ((numArgs > 3 && selectionArgs[3] != null) ? " AND " + sCardFiltersCardSetSelection : "") +
+                    // Mechanics filter check
+                    ((numArgs > 4 && selectionArgs[4] != null) ? " AND " + sCardFiltersMechanicsSelection : "");
+        }
 
         Cursor retCursor;
         switch (sUriMatcher.match(uri)) {
