@@ -22,6 +22,11 @@
 
     <!-- SharedPreferences keys -->
     <string name="card_download_key" translatable="false">com.mattpflance.hearthlist.CARD_DOWN_KEY</string>
+    <string name="min_mana_key" translatable="false">com.mattpflance.hearthlist.MIN_MANA_KEY</string>
+    <string name="max_mana_key" translatable="false">com.mattpflance.hearthlist.MAX_MANA_KEY</string>
+    <string name="card_class_key" translatable="false">com.mattpflance.hearthlist.CARD_CLASS_KEY</string>
+    <string name="card_sets_key" translatable="false">com.mattpflance.hearthlist.CARD_SETS_KEY</string>
+    <string name="card_mechanics_key" translatable="false">com.mattpflance.hearthlist.CARD_MECHANICS_KEY</string>
 
     <!-- Card Detail -->
     <string name="reg_image_text">Normal</string>
@@ -42,6 +47,5 @@
     <string name="title_class_filters">Class</string>
     <string name="title_card_set_filters">Card Set</string>
     <string name="title_mechanics_filters">Mechanics</string>
-
 
 </resources>

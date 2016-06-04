@@ -1,0 +1,66 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/title_mana_cost_filters"
+            style="@style/filter_title_text" />
+
+        <org.florescu.android.rangeseekbar.RangeSeekBar
+            android:id="@+id/mana_range_seek_bar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <LinearLayout
+            android:id="@+id/class_linear_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/title_class_filters"
+                style="@style/filter_title_text" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/card_set_linear_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/title_card_set_filters"
+                style="@style/filter_title_text" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/mechanics_linear_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/title_mechanics_filters"
+                style="@style/filter_title_text" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</ScrollView>
