@@ -308,6 +308,7 @@ public class DataDownloadIntentService extends IntentService {
         mCursor.moveToFirst();
 
         do {
+            // TODO DON'T download original size
             Glide.with(this)
                     // Url becomes name of the file
                     .load((imageType == IMAGE_TYPE_REGULAR) ?
