@@ -9,11 +9,9 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SimpleItemAnimator;
 import android.view.LayoutInflater;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -21,22 +19,28 @@ import android.widget.TextView;
 import com.mattpflance.hearthlist.data.HearthListContract;
 import com.mattpflance.hearthlist.models.Card;
 import com.mattpflance.hearthlist.settings.CardFiltersActivity;
+import com.mattpflance.hearthlist.settings.CardFiltersFragment;
 
+import java.util.ArrayList;
 
 /**
  * Fragment that displays HearthStone cards
  */
-public class CardsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
-
-    private static final int UPDATE_CURSOR = 1;
+public class CardsFragment extends Fragment implements
+        LoaderManager.LoaderCallbacks<Cursor>,
+        CardFiltersFragment.CardFiltersCallback {
 
     private static final int CARD_LOADER = 0;
 
-    private CardsAdapter mCardsAdapter;
+    // Keep a reference to the singleton instance to set up the Filters callback
+    private static CardsFragment mSingletonInstance;
 
-    private RecyclerView mRecyclerView;
-    private TextView mEmptyView;
-    private FloatingActionButton mFilterFab;
+    private CardsAdapter mCardsAdapter;
+    private static ArrayList<String> mSelectionArgs;
+
+    RecyclerView mRecyclerView;
+    TextView mEmptyView;
+    FloatingActionButton mFilterFab;
 
     public CardsFragment() {
     }
@@ -46,10 +50,11 @@ public class CardsFragment extends Fragment implements LoaderManager.LoaderCallb
      * this fragment using the provided parameters.
      */
     public static CardsFragment newInstance() {
-        CardsFragment fragment = new CardsFragment();
-//        Bundle args = new Bundle();
-//        fragment.setArguments(args);
-        return fragment;
+        mSingletonInstance = new CardsFragment();
+        mSelectionArgs = new ArrayList<>();
+        mSelectionArgs.add(Card.MIN_MANA_COST+"");
+        mSelectionArgs.add(Card.MAX_MANA_COST+"");
+        return mSingletonInstance;
     }
 
     @Override
@@ -82,9 +87,8 @@ public class CardsFragment extends Fragment implements LoaderManager.LoaderCallb
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), CardFiltersActivity.class);
-//                Card card = (cursor != null) ? new Card(cursor) : null;
-//                intent.putExtra(CardDetailsActivity.CARD_ARG_ID, card);
-                startActivityForResult(intent, UPDATE_CURSOR);
+                intent.putExtra(CardFiltersActivity.SELECTION_ARG_KEY, mSelectionArgs);
+                startActivity(intent);
             }
         });
 
@@ -105,8 +109,8 @@ public class CardsFragment extends Fragment implements LoaderManager.LoaderCallb
                 getActivity(),
                 HearthListContract.CardEntry.CONTENT_URI,
                 Card.CARD_COLUMNS,
-                null,
-                null,
+                null,                                       // Implemented in ContentProvider
+                mSelectionArgs.toArray(new String[mSelectionArgs.size()]),
                 sortOrder);
     }
 
@@ -118,5 +122,12 @@ public class CardsFragment extends Fragment implements LoaderManager.LoaderCallb
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         mCardsAdapter.swapCursor(null);
+    }
+
+    public static CardsFragment getInstance() { return mSingletonInstance; }
+
+    public void setFilterSelectionArgs(ArrayList<String> selectionArgs) {
+        mSelectionArgs = selectionArgs;
+        getLoaderManager().restartLoader(0, null, this);
     }
 }
