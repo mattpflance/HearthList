@@ -36,4 +36,12 @@
     <string name="card_how_to_get_text">How To Get</string>
     <string name="card_how_to_get_gold_text">How To Get Gold</string>
 
+    <!-- Filter Strings -->
+    <string name="title_activity_card_filters">Card Filters</string>
+    <string name="title_mana_cost_filters">Mana Cost</string>
+    <string name="title_class_filters">Class</string>
+    <string name="title_card_set_filters">Card Set</string>
+    <string name="title_mechanics_filters">Mechanics</string>
+
+
 </resources>
