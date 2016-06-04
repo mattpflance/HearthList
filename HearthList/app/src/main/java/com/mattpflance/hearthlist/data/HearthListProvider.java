@@ -19,6 +19,23 @@ public class HearthListProvider extends ContentProvider {
     static final int ALL_DECKS = 300;
     static final int DECK = 301;
 
+    private static final String sCardFiltersManaSelection =
+            // Min mana cost
+            HearthListContract.CardEntry.COLUMN_COST + " >= ? AND " +
+            // Max mana cost
+            HearthListContract.CardEntry.COLUMN_COST + " <= ?";
+
+    private static final String sCardFiltersClassSelection =
+            HearthListContract.CardEntry.COLUMN_PLAYER_CLASS + " = ?";
+
+    // TODO Fix. SQL query isn't valid
+    private static final String sCardFiltersCardSetSelection =
+            " ? LIKE \"%" + HearthListContract.CardEntry.COLUMN_SET + "%\"";
+
+    // TODO Fix. SQL query isn't valid
+    private static final String sCardFiltersMechanicsSelection =
+            " ? LIKE \"%" + HearthListContract.CardEntry.COLUMN_MECHANICS;
+
     static UriMatcher buildUriMatcher() {
 
         final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
@@ -66,13 +83,22 @@ public class HearthListProvider extends ContentProvider {
 
         /* We query all cards/decks when displaying data and never a single card or deck */
 
+        int numArgs = selectionArgs.length;
+        String filterSelection = sCardFiltersManaSelection +
+                // Class filter check
+                ((numArgs > 2 && !selectionArgs[2].equals("")) ?  " AND " + sCardFiltersClassSelection : "") +
+                // Card Set filter check
+                ((numArgs > 3 && !selectionArgs[3].equals("")) ? " AND " + sCardFiltersCardSetSelection : "") +
+                // Mechanics filter check
+                ((numArgs > 4 && !selectionArgs[4].equals("")) ? " AND " + sCardFiltersMechanicsSelection : "");
+
         Cursor retCursor;
         switch (sUriMatcher.match(uri)) {
             case ALL_CARDS:
                 retCursor = mOpenHelper.getReadableDatabase().query(
                         HearthListContract.CardEntry.TABLE_NAME,
                         projection,
-                        selection,
+                        filterSelection,
                         selectionArgs,
                         null,
                         null,
