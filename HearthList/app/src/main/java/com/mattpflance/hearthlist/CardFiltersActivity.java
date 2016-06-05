@@ -84,22 +84,37 @@ public class CardFiltersActivity extends AppCompatActivity implements
             }
         }
 
-        // Use this LinearLayout to add filter selections
-        LinearLayout ll;
-
         // Card Sets
         Set<String> cardSet = prefs.getStringSet(getString(R.string.card_sets_key), null);
-        ll = (LinearLayout) findViewById(R.id.card_set_linear_layout);
-        if (cardSet != null & ll != null) {
+        if (cardSet != null) {
             int length = cardSet.size();
             String[] cardSetArr = cardSet.toArray(new String[length]);
-            // TODO Add card sets
+            Spinner spinner = (Spinner) findViewById(R.id.card_set_spinner);
+            if (spinner != null) {
+                Arrays.sort(cardSetArr);
+
+                // Add 'None' to the top
+                ArrayList<String> temp = new ArrayList<>(Arrays.asList(cardSetArr));
+                temp.add(0, getString(R.string.no_filter));
+                cardSetArr = temp.toArray(new String[length+1]);
+
+                spinner.setOnItemSelectedListener(this);
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                        this,
+                        android.R.layout.simple_spinner_dropdown_item,
+                        cardSetArr);
+                spinner.setAdapter(adapter);
+
+                // Set the user selected value
+                String selection = mSelectionArgs.get(CardsFragment.ARGS_CARD_SET);
+                spinner.setSelection(selection != null ? temp.indexOf(selection) : 0);
+            }
 
         }
 
         // Mechanics
         Set<String> mechanicsSet = prefs.getStringSet(getString(R.string.card_mechanics_key), null);
-        ll = (LinearLayout) findViewById(R.id.mechanics_linear_layout);
+        LinearLayout ll = (LinearLayout) findViewById(R.id.mechanics_linear_layout);
         if (mechanicsSet != null && ll != null) {
             int length = mechanicsSet.size();
             String[] mechanicsArr = mechanicsSet.toArray(new String[length]);
@@ -118,7 +133,12 @@ public class CardFiltersActivity extends AppCompatActivity implements
         String value = (String) parent.getItemAtPosition(position);
         if (value != null) {
             value = value.equals(getString(R.string.no_filter)) ? null : value;
-            mSelectionArgs.set(CardsFragment.ARGS_CLASS, value);
+            int spinnerId = parent.getId();
+            if (spinnerId == R.id.class_spinner) {
+                mSelectionArgs.set(CardsFragment.ARGS_CLASS, value);
+            } else if (spinnerId == R.id.card_set_spinner) {
+                mSelectionArgs.set(CardsFragment.ARGS_CARD_SET, value);
+            }
         }
         updateActivityResult();
     }
