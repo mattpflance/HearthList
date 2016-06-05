@@ -32,9 +32,8 @@ public class HearthListProvider extends ContentProvider {
     private static final String sCardFiltersClassSelection =
             HearthListContract.CardEntry.COLUMN_PLAYER_CLASS + " = ?";
 
-    // TODO Fix. SQL query isn't valid
     private static final String sCardFiltersCardSetSelection =
-            " ? LIKE \"%" + HearthListContract.CardEntry.COLUMN_SET + "%\"";
+            HearthListContract.CardEntry.COLUMN_SET + " = ?";
 
     // TODO Fix. SQL query isn't valid
     private static final String sCardFiltersMechanicsSelection =
