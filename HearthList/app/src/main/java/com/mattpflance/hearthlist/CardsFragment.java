@@ -18,18 +18,23 @@ import android.widget.TextView;
 
 import com.mattpflance.hearthlist.data.HearthListContract;
 import com.mattpflance.hearthlist.models.Card;
-import com.mattpflance.hearthlist.settings.CardFiltersActivity;
-import com.mattpflance.hearthlist.settings.CardFiltersFragment;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
  * Fragment that displays HearthStone cards
  */
-public class CardsFragment extends Fragment implements
-        LoaderManager.LoaderCallbacks<Cursor>,
-        CardFiltersFragment.CardFiltersCallback {
+public class CardsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
+    // For selection args
+    public static final int ARGS_MIN_MANA = 0;
+    public static final int ARGS_MAX_MANA = 1;
+    public static final int ARGS_CLASS = 2;
+    public static final int ARGS_CARD_SET = 3;
+    public static final int ARGS_MECHANICS = 4;
+
+    static final int FILTER_SELECTION_ARGS = 1;  // The request code
     private static final int CARD_LOADER = 0;
 
     // Keep a reference to the singleton instance to set up the Filters callback
@@ -49,11 +54,11 @@ public class CardsFragment extends Fragment implements
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      */
-    public static CardsFragment newInstance() {
+    public static CardsFragment newInstance(int minMana, int maxMana) {
         mSingletonInstance = new CardsFragment();
         mSelectionArgs = new ArrayList<>();
-        mSelectionArgs.add(Card.MIN_MANA_COST+"");
-        mSelectionArgs.add(Card.MAX_MANA_COST+"");
+        mSelectionArgs.add(minMana+"");
+        mSelectionArgs.add(maxMana+"");
         return mSingletonInstance;
     }
 
@@ -88,11 +93,21 @@ public class CardsFragment extends Fragment implements
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), CardFiltersActivity.class);
                 intent.putExtra(CardFiltersActivity.SELECTION_ARG_KEY, mSelectionArgs);
-                startActivity(intent);
+                startActivityForResult(intent, FILTER_SELECTION_ARGS);
             }
         });
 
         return view;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        // Check which request we're responding to
+        if (requestCode == FILTER_SELECTION_ARGS) {
+            mSelectionArgs = data.getStringArrayListExtra(CardFiltersActivity.SELECTION_ARG_KEY);
+            getLoaderManager().restartLoader(CARD_LOADER, null, this);
+        }
     }
 
     @Override
@@ -122,12 +137,5 @@ public class CardsFragment extends Fragment implements
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         mCardsAdapter.swapCursor(null);
-    }
-
-    public static CardsFragment getInstance() { return mSingletonInstance; }
-
-    public void setFilterSelectionArgs(ArrayList<String> selectionArgs) {
-        mSelectionArgs = selectionArgs;
-        getLoaderManager().restartLoader(0, null, this);
     }
 }
