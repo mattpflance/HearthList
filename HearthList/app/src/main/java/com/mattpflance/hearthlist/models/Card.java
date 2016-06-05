@@ -13,10 +13,6 @@ import java.util.ArrayList;
  */
 public class Card implements Parcelable {
 
-    // Can possibly use Tag Manager to update these values
-    public static final int MIN_MANA_COST = 0;
-    public static final int MAX_MANA_COST = 25;
-
     // Only want to show a subset of the data
     public static final String[] CARD_COLUMNS = {
             HearthListContract.CardEntry.COLUMN_NAME,
