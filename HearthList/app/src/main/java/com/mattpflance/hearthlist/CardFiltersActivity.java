@@ -124,6 +124,12 @@ public class CardFiltersActivity extends AppCompatActivity implements
             String[] mechanicsArr = mechanicsSet.toArray(new String[length]);
             Arrays.sort(mechanicsArr);
 
+            String mechanicsStr = mSelectionArgs.get(CardsFragment.ARGS_MECHANICS);
+
+            ArrayList<String> selectedMechanics = null;
+            if (mechanicsStr != null)
+                    selectedMechanics = new ArrayList<>(Arrays.asList(mechanicsStr.split("-")));
+
             // TODO optimize how the grid is displayed
             int colWidth = getResources().getDisplayMetrics().widthPixels/(gl.getColumnCount()+1);
 
@@ -133,6 +139,10 @@ public class CardFiltersActivity extends AppCompatActivity implements
                 cb.setScaleX(0.8f);
                 cb.setScaleY(0.8f);
                 cb.setWidth(colWidth);
+
+                if (selectedMechanics != null && selectedMechanics.contains("%"+mechanicsArr[i]+"%"))
+                    cb.setChecked(true);
+
                 cb.setOnCheckedChangeListener(this);
                 gl.addView(cb);
             }
@@ -179,7 +189,7 @@ public class CardFiltersActivity extends AppCompatActivity implements
         }
 
         // Add/Remove the mechanic that was checked/unchecked
-        String mechanic = checkBox.getText().toString();
+        String mechanic = "%" + checkBox.getText().toString() + "%";
         if (isChecked) {
             mechanics.add(mechanic);
         } else {
@@ -188,16 +198,18 @@ public class CardFiltersActivity extends AppCompatActivity implements
 
         // Convert back to String
         String prefix = "";
-        StringBuilder builder = new StringBuilder();
-        for (String m : mechanics) {
-            builder.append(prefix);
-            prefix = "-";
-            builder.append("%");
-            builder.append(m);
-            builder.append("%");
+        StringBuilder builder = null;
+        if (mechanics.size() > 0) {
+            builder = new StringBuilder();
+            for (String m : mechanics) {
+                builder.append(prefix);
+                prefix = "-";
+                builder.append(m);
+            }
         }
 
-        mSelectionArgs.set(CardsFragment.ARGS_MECHANICS, builder.toString());
+        mSelectionArgs.set(CardsFragment.ARGS_MECHANICS,
+                (builder == null) ? null : builder.toString());
         updateActivityResult();
     }
 
