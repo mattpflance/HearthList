@@ -57,8 +57,11 @@ public class CardsFragment extends Fragment implements LoaderManager.LoaderCallb
     public static CardsFragment newInstance(int minMana, int maxMana) {
         mSingletonInstance = new CardsFragment();
         mSelectionArgs = new ArrayList<>();
-        mSelectionArgs.add(minMana+"");
-        mSelectionArgs.add(maxMana+"");
+        mSelectionArgs.add(ARGS_MIN_MANA, minMana+"");
+        mSelectionArgs.add(ARGS_MAX_MANA, maxMana+"");
+        mSelectionArgs.add(ARGS_CLASS, null);
+        mSelectionArgs.add(ARGS_CARD_SET, null);
+        mSelectionArgs.add(ARGS_MECHANICS, null);
         return mSingletonInstance;
     }
 

@@ -8,6 +8,10 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 
+import com.mattpflance.hearthlist.CardsFragment;
+
+import java.util.ArrayList;
+
 public class HearthListProvider extends ContentProvider {
 
     // The URI Matcher used by this content provider.
@@ -85,14 +89,27 @@ public class HearthListProvider extends ContentProvider {
 
         String filterSelection = null;
         if (selectionArgs != null) {
-            int numArgs = selectionArgs.length;
             filterSelection = sCardFiltersManaSelection +
                     // Class filter check
-                    ((numArgs > 2 && selectionArgs[2] != null) ?  " AND " + sCardFiltersClassSelection : "") +
+                    (selectionArgs[CardsFragment.ARGS_CLASS] != null ?
+                            " AND " + sCardFiltersClassSelection : "") +
                     // Card Set filter check
-                    ((numArgs > 3 && selectionArgs[3] != null) ? " AND " + sCardFiltersCardSetSelection : "") +
+                    (selectionArgs[CardsFragment.ARGS_CARD_SET] != null ?
+                            " AND " + sCardFiltersCardSetSelection : "") +
                     // Mechanics filter check
-                    ((numArgs > 4 && selectionArgs[4] != null) ? " AND " + sCardFiltersMechanicsSelection : "");
+                    (selectionArgs[CardsFragment.ARGS_MECHANICS] != null ?
+                            " AND " + sCardFiltersMechanicsSelection : "");
+
+            // Need to remove null values from selectionArgs
+            int numArgs = selectionArgs.length;
+            ArrayList<String> args = new ArrayList<>();
+            for (int i=0; i<numArgs; i++) {
+                if (selectionArgs[i] != null) {
+                    args.add(selectionArgs[i]);
+                }
+            }
+            selectionArgs = new String[args.size()];
+            selectionArgs = args.toArray(selectionArgs);
         }
 
         Cursor retCursor;

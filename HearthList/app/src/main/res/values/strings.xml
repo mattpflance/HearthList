@@ -47,5 +47,6 @@
     <string name="title_class_filters">Class</string>
     <string name="title_card_set_filters">Card Set</string>
     <string name="title_mechanics_filters">Mechanics</string>
+    <string name="no_filter">None</string>
 
 </resources>
