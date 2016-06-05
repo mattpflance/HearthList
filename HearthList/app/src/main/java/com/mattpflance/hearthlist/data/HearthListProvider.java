@@ -11,6 +11,7 @@ import android.net.Uri;
 import com.mattpflance.hearthlist.CardsFragment;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class HearthListProvider extends ContentProvider {
 
@@ -35,9 +36,8 @@ public class HearthListProvider extends ContentProvider {
     private static final String sCardFiltersCardSetSelection =
             HearthListContract.CardEntry.COLUMN_SET + " = ?";
 
-    // TODO Fix. SQL query isn't valid
     private static final String sCardFiltersMechanicsSelection =
-            " ? LIKE \"%" + HearthListContract.CardEntry.COLUMN_MECHANICS;
+            HearthListContract.CardEntry.COLUMN_MECHANICS + " LIKE ?";
 
     static UriMatcher buildUriMatcher() {
 
@@ -94,19 +94,32 @@ public class HearthListProvider extends ContentProvider {
                             " AND " + sCardFiltersClassSelection : "") +
                     // Card Set filter check
                     (selectionArgs[CardsFragment.ARGS_CARD_SET] != null ?
-                            " AND " + sCardFiltersCardSetSelection : "") +
-                    // Mechanics filter check
-                    (selectionArgs[CardsFragment.ARGS_MECHANICS] != null ?
-                            " AND " + sCardFiltersMechanicsSelection : "");
+                            " AND " + sCardFiltersCardSetSelection : "");
+
+            // We need to create separate statements to check for each mechanic.
+            // This means breaking down selectionArgs[CardsFragment.ARS_MECHANICS]
+            // into individual Strings
+            String mechanicsStr = selectionArgs[CardsFragment.ARGS_MECHANICS];
+            ArrayList<String> mechanics = null;
+            if (mechanicsStr != null) {
+                mechanics = new ArrayList<>(Arrays.asList(mechanicsStr.split("-")));
+                for (String m : mechanics) {
+                    filterSelection += " AND " + sCardFiltersMechanicsSelection;
+                }
+            }
 
             // Need to remove null values from selectionArgs
-            int numArgs = selectionArgs.length;
+            int numArgs = selectionArgs.length-1; // -1 to not count mechanics
             ArrayList<String> args = new ArrayList<>();
             for (int i=0; i<numArgs; i++) {
                 if (selectionArgs[i] != null) {
                     args.add(selectionArgs[i]);
                 }
             }
+
+            // Combine mechanics and args to form the required selectionArgs
+            if (mechanics != null) args.addAll(mechanics);
+
             selectionArgs = new String[args.size()];
             selectionArgs = args.toArray(selectionArgs);
         }

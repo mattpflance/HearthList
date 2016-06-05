@@ -5,20 +5,24 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayout;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.Spinner;
 
 import org.florescu.android.rangeseekbar.RangeSeekBar;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 
 public class CardFiltersActivity extends AppCompatActivity implements
-        AdapterView.OnItemSelectedListener{
+        AdapterView.OnItemSelectedListener,
+        CompoundButton.OnCheckedChangeListener {
 
     static final String SELECTION_ARG_KEY = "SELECT_KEY";
 
@@ -114,11 +118,24 @@ public class CardFiltersActivity extends AppCompatActivity implements
 
         // Mechanics
         Set<String> mechanicsSet = prefs.getStringSet(getString(R.string.card_mechanics_key), null);
-        LinearLayout ll = (LinearLayout) findViewById(R.id.mechanics_linear_layout);
-        if (mechanicsSet != null && ll != null) {
+        GridLayout gl = (GridLayout) findViewById(R.id.mechanics_grid_layout);
+        if (mechanicsSet != null && gl != null) {
             int length = mechanicsSet.size();
             String[] mechanicsArr = mechanicsSet.toArray(new String[length]);
-            // TODO Add mechanics
+            Arrays.sort(mechanicsArr);
+
+            // TODO optimize how the grid is displayed
+            int colWidth = getResources().getDisplayMetrics().widthPixels/(gl.getColumnCount()+1);
+
+            for (int i=0; i<length; i++) {
+                CheckBox cb = new CheckBox(this);
+                cb.setText(mechanicsArr[i]);
+                cb.setScaleX(0.8f);
+                cb.setScaleY(0.8f);
+                cb.setWidth(colWidth);
+                cb.setOnCheckedChangeListener(this);
+                gl.addView(cb);
+            }
 
         }
 
@@ -145,6 +162,43 @@ public class CardFiltersActivity extends AppCompatActivity implements
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
         // Do nothing
+    }
+
+    /**
+     * OnCheckedChangeListener implementation for Mechanics
+     */
+    @Override
+    public void onCheckedChanged(CompoundButton checkBox, boolean isChecked) {
+        String mechanicsStr = mSelectionArgs.get(CardsFragment.ARGS_MECHANICS);
+        // Put string into ArrayList to work with
+        ArrayList<String> mechanics;
+        if (mechanicsStr == null) {
+            mechanics = new ArrayList<>();
+        }  else {
+            mechanics = new ArrayList<>(Arrays.asList(mechanicsStr.split("-")));
+        }
+
+        // Add/Remove the mechanic that was checked/unchecked
+        String mechanic = checkBox.getText().toString();
+        if (isChecked) {
+            mechanics.add(mechanic);
+        } else {
+            mechanics.remove(mechanic);
+        }
+
+        // Convert back to String
+        String prefix = "";
+        StringBuilder builder = new StringBuilder();
+        for (String m : mechanics) {
+            builder.append(prefix);
+            prefix = "-";
+            builder.append("%");
+            builder.append(m);
+            builder.append("%");
+        }
+
+        mSelectionArgs.set(CardsFragment.ARGS_MECHANICS, builder.toString());
+        updateActivityResult();
     }
 
     /**
