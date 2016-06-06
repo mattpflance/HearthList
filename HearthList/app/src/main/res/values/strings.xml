@@ -17,8 +17,9 @@
     <string name="attack_desc">The card\'s attack icon</string>
     <string name="health_desc">The card\'s health icon</string>
 
-    <!-- Cards Fragment strings -->
+    <!-- empty strings -->
     <string name="empty_cards_view">No cards found.</string>
+    <string name="empty_decks_view">No decks? Create one by tapping the + button!</string>
 
     <!-- SharedPreferences keys -->
     <string name="card_download_key" translatable="false">com.mattpflance.hearthlist.CARD_DOWN_KEY</string>
