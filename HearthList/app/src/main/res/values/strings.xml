@@ -50,4 +50,13 @@
     <string name="title_mechanics_filters">Mechanics</string>
     <string name="no_filter">None</string>
 
+    <!-- Deck Creation Strings -->
+    <string name="title_deck_creation">Create a Deck</string>
+    <string name="label_deck_negative">Cancel</string>
+    <string name="label_deck_positive">Create</string>
+    <string name="title_deck_name">Name</string>
+    <string name="title_deck_class">Class</string>
+    <string name="default_deck_name">-</string>
+    <string name="neutral" translatable="false">Neutral</string>
+
 </resources>
