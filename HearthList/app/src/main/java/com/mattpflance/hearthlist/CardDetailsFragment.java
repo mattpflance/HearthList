@@ -20,10 +20,7 @@ import com.mattpflance.hearthlist.models.Card;
 public class CardDetailsFragment extends Fragment {
 
     private Card mCard;
-
     private ImageView mCardImage;
-    private Button mRegImageButton;
-    private Button mGoldImageButton;
 
     public CardDetailsFragment() {
     }
@@ -54,8 +51,8 @@ public class CardDetailsFragment extends Fragment {
 
         mCardImage = (ImageView) view.findViewById(R.id.card_image);
 
-        mRegImageButton = (Button) view.findViewById(R.id.reg_image_button);
-        mRegImageButton.setOnClickListener(new View.OnClickListener() {
+        Button regImageButton = (Button) view.findViewById(R.id.reg_image_button);
+        regImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // TODO change both button's background state to pressed when clicked
@@ -69,8 +66,8 @@ public class CardDetailsFragment extends Fragment {
             }
         });
 
-        mGoldImageButton = (Button) view.findViewById(R.id.gold_image_button);
-        mGoldImageButton.setOnClickListener(new View.OnClickListener() {
+        Button goldImageButton = (Button) view.findViewById(R.id.gold_image_button);
+        goldImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // TODO change both button's background state to pressed when clicked
