@@ -19,7 +19,6 @@ import android.widget.TextView;
 import com.mattpflance.hearthlist.data.HearthListContract;
 import com.mattpflance.hearthlist.models.Card;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
@@ -37,9 +36,6 @@ public class CardsFragment extends Fragment implements LoaderManager.LoaderCallb
     static final int FILTER_SELECTION_ARGS = 1;  // The request code
     private static final int CARD_LOADER = 0;
 
-    // Keep a reference to the singleton instance to set up the Filters callback
-    private static CardsFragment mSingletonInstance;
-
     private CardsAdapter mCardsAdapter;
     private static ArrayList<String> mSelectionArgs;
 
@@ -55,14 +51,13 @@ public class CardsFragment extends Fragment implements LoaderManager.LoaderCallb
      * this fragment using the provided parameters.
      */
     public static CardsFragment newInstance(int minMana, int maxMana) {
-        mSingletonInstance = new CardsFragment();
         mSelectionArgs = new ArrayList<>();
         mSelectionArgs.add(ARGS_MIN_MANA, minMana+"");
         mSelectionArgs.add(ARGS_MAX_MANA, maxMana+"");
         mSelectionArgs.add(ARGS_CLASS, null);
         mSelectionArgs.add(ARGS_CARD_SET, null);
         mSelectionArgs.add(ARGS_MECHANICS, null);
-        return mSingletonInstance;
+        return new CardsFragment();
     }
 
     @Override

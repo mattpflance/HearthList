@@ -18,7 +18,7 @@
     <string name="health_desc">The card\'s health icon</string>
 
     <!-- Cards Fragment strings -->
-    <string name="empty_cards_view">Please connect to the internet to get data.</string>
+    <string name="empty_cards_view">No cards found.</string>
 
     <!-- SharedPreferences keys -->
     <string name="card_download_key" translatable="false">com.mattpflance.hearthlist.CARD_DOWN_KEY</string>

@@ -18,6 +18,7 @@
         android:id="@+id/cards_recycler_empty_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:text="@string/empty_cards_view"/>
 
     <android.support.design.widget.FloatingActionButton
