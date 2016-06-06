@@ -20,7 +20,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".CardDetailsActivity" />
+        <activity
+            android:name=".CardDetailsActivity"
+            android:parentActivityName="com.mattpflance.hearthlist.MainActivity">
+            <!-- Support for Android 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.mattpflance.hearthlist.MainActivity" />
+        </activity>
         <activity
             android:name=".CardFiltersActivity"
             android:label="@string/title_activity_card_filters"
