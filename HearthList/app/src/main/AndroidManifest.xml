@@ -28,10 +28,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.mattpflance.hearthlist.MainActivity" />
         </activity>
-        <activity
-            android:name=".CardFiltersActivity"
-            android:label="@string/title_activity_card_filters"
-            android:theme="@style/AppTheme.Dialog"/>
 
         <provider
             android:name=".data.HearthListProvider"
