@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Analytics tracking -->
+    <string name="ga_trackingId">UA-79013418-1</string>
+    <bool name="ga_autoActivityTracking">true</bool>
+
+    <!-- Screen names -->
+    <screenName name="com.mattpflance.hearthlist.MainActivity">Home Tabs</screenName>
+    <screenName name="com.mattpflance.hearthlist.CardDetailsActivity">Card Details</screenName>
+</resources>
