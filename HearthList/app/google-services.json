@@ -1,0 +1,38 @@
+{
+  "project_info": {
+    "project_number": "285212671700",
+    "project_id": "hearthlist"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:285212671700:android:0122c85a623373da",
+        "android_client_info": {
+          "package_name": "com.mattpflance.hearthlist"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDel-zY_Ncmmq_-sldzvuWEHZ_3VoE7b6Y"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 2,
+          "analytics_property": {
+            "tracking_id": "UA-79013418-1"
+          }
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
