@@ -5,21 +5,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-
-import com.mattpflance.hearthlist.data.HearthListContract;
 
 public class MainActivity extends AppCompatActivity {
-
-    private TabLayout mTabLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,14 +28,16 @@ public class MainActivity extends AppCompatActivity {
             startService(new Intent(this, DataDownloadIntentService.class));
         }
 
-        mTabLayout = (TabLayout) findViewById(R.id.tab_layout);
-        mTabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
-
         ViewPager viewPager = (ViewPager) findViewById(R.id.view_pager);
 
         PagerAdapter pagerAdapter = new PagerAdapter(getSupportFragmentManager(), this);
-        viewPager.setAdapter(pagerAdapter);
+        if (viewPager != null)
+            viewPager.setAdapter(pagerAdapter);
 
-        mTabLayout.setupWithViewPager(viewPager);
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        if (tabLayout != null) {
+            tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+            tabLayout.setupWithViewPager(viewPager);
+        }
     }
 }
