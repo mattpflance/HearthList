@@ -61,4 +61,7 @@
     <string name="default_deck_name">-</string>
     <string name="neutral" translatable="false">Neutral</string>
 
+    <!-- Tag Manager -->
+    <string name="gtm_default_string" translatable="false">GTM-NNCGQW</string>
+
 </resources>

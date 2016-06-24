@@ -4,6 +4,8 @@ import android.app.Application;
 
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.Tracker;
+import com.google.android.gms.tagmanager.ContainerHolder;
+import com.google.android.gms.tagmanager.TagManager;
 
 /**
  * Singleton instance of the Application to store singleton values
@@ -11,6 +13,22 @@ import com.google.android.gms.analytics.Tracker;
 public class HearthListApplication extends Application {
 
     public Tracker mTracker;
+
+    public ContainerHolder mContainerHolder;
+    public TagManager mTagManager;
+
+    public TagManager getTagManager() {
+        if (mTagManager == null) {
+            mTagManager = TagManager.getInstance(this);
+        }
+        return mTagManager;
+    }
+
+    public void setContainerHolder(ContainerHolder containerHolder) {
+        mContainerHolder = containerHolder;
+    }
+
+    public ContainerHolder getContainerHolder() { return mContainerHolder; }
 
     public void startTracking() {
         // Create the singleton Tracker
