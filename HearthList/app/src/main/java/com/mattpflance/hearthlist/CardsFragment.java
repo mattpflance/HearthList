@@ -89,6 +89,7 @@ public class CardsFragment extends Fragment implements LoaderManager.LoaderCallb
                     startActivity(intent, bundle);
                 } else {
                     startActivity(intent);
+                    getActivity().overridePendingTransition(R.anim.top_to_bottom, R.anim.right_to_left);
                 }
             }
         }, mEmptyView);
