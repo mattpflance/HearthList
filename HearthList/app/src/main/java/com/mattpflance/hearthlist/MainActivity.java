@@ -9,6 +9,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
@@ -35,15 +36,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        // Check SharedPreferences
-        SharedPreferences prefs = getSharedPreferences(null, Context.MODE_PRIVATE);
-        boolean alreadyDownloaded = prefs.getBoolean(getString(R.string.card_download_key), false);
-        if (!alreadyDownloaded) {
-            startService(new Intent(this, DataDownloadIntentService.class));
-        }
-
         ViewPager viewPager = (ViewPager) findViewById(R.id.view_pager);
-
         PagerAdapter pagerAdapter = new PagerAdapter(getSupportFragmentManager(), this);
         if (viewPager != null)
             viewPager.setAdapter(pagerAdapter);
@@ -75,8 +68,34 @@ public class MainActivity extends AppCompatActivity {
 
                 // Load container holder
                 ((HearthListApplication) getApplication()).setContainerHolder(containerHolder);
+
+                // Auto update cards if needed
+                checkForAutoUpdate();
             }
         }, 2, TimeUnit.SECONDS);
+    }
+
+    /**
+     * Helper function that checks Tag Manager and SharedPrefs to see
+     * if the app needs to start the DataDownloadIntentService to get
+     * new cards.
+     */
+    private void checkForAutoUpdate() {
+
+        // Gets whatever CardSet the app is up-to-date
+        SharedPreferences prefs = getSharedPreferences(null, Context.MODE_PRIVATE);
+        String cardSetDownloaded = prefs.getString(getString(R.string.card_download_key), "");
+
+        // Check TagManager to see what the current CardSet is
+        ContainerHolder holder = ((HearthListApplication) getApplication()).getContainerHolder();
+        String currentCardSet = holder.getContainer()
+                .getString(getString(R.string.tag_manager_update_key));
+
+        // If the Strings are not the same, we need to download new data!
+        if (!(currentCardSet.equals(cardSetDownloaded))) {
+            Log.d("checkForAutoUpdate", "Downloading new cards!");
+            startService(new Intent(this, DataDownloadIntentService.class));
+        }
     }
 
 }

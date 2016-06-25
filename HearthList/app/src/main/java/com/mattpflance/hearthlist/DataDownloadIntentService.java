@@ -71,9 +71,6 @@ public class DataDownloadIntentService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        long startTime = System.currentTimeMillis();
-        long endTime = 0;
-
         OkHttpClient mClient = new OkHttpClient();
 
         Request request = new Request.Builder()
@@ -102,30 +99,21 @@ public class DataDownloadIntentService extends IntentService {
         }
 
         downloadCardData(cardSets);
-        endTime = System.currentTimeMillis() - startTime;
-        Log.e("CardData", "Finished downloading in " + endTime + " ms.");
 
         // Get cursor
         String sortOrder = HearthListContract.CardEntry.COLUMN_COST + " ASC";
         mCursor = getContentResolver().query(HearthListContract.CardEntry.CONTENT_URI,
                 URL_COLUMNS, null, null, sortOrder);
 
-        startTime = System.currentTimeMillis();
         downloadImages(IMAGE_TYPE_REGULAR);
-        endTime = System.currentTimeMillis() - startTime;
-        Log.e("RegImages", "Finished downloading in " + endTime + " ms.");
-
-        startTime = System.currentTimeMillis();
         downloadImages(IMAGE_TYPE_GOLD);
-        endTime = System.currentTimeMillis() - startTime;
-        Log.e("GoldImages", "Finished downloading in " + endTime + " ms.");
 
         mCursor.close();
 
         // Store a boolean (for now) so we do not make a second API call after download starts
         SharedPreferences prefs = getSharedPreferences(null, MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
-        editor.putBoolean(getString(R.string.card_download_key), true);
+        editor.putString(getString(R.string.card_download_key), ""); // TODO temp
         editor.apply();
     }
 

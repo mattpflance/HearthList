@@ -63,5 +63,6 @@
 
     <!-- Tag Manager -->
     <string name="gtm_default_string" translatable="false">GTM-NNCGQW</string>
+    <string name="tag_manager_update_key">com.mattpflance.hearthlist.update_key</string>
 
 </resources>
