@@ -1,7 +1,9 @@
 package com.mattpflance.hearthlist;
 
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -79,7 +81,15 @@ public class CardsFragment extends Fragment implements LoaderManager.LoaderCallb
                 Intent intent = new Intent(getActivity(), CardDetailsActivity.class);
                 Card card = (cursor != null) ? new Card(cursor) : null;
                 intent.putExtra(CardDetailsActivity.CARD_ARG_ID, card);
-                startActivity(intent);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    // Start Activity with Transitions
+                    Bundle bundle = ActivityOptions
+                            .makeSceneTransitionAnimation(getActivity())
+                            .toBundle();
+                    startActivity(intent, bundle);
+                } else {
+                    startActivity(intent);
+                }
             }
         }, mEmptyView);
 

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
@@ -11,7 +12,9 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.transition.Slide;
 import android.util.Log;
+import android.view.Gravity;
 
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
@@ -32,6 +35,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        initTransitions();
+
         // Track for Analytics
         ((HearthListApplication) getApplication()).startTracking();
 
@@ -51,6 +56,21 @@ public class MainActivity extends AppCompatActivity {
             tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
             tabLayout.setupWithViewPager(viewPager);
         }
+    }
+
+    private void initTransitions() {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+
+            Slide slideTransition = new Slide();
+            // Gravity.START is an invalid slide direction
+            slideTransition.setSlideEdge(Gravity.LEFT);
+            slideTransition.setDuration(500);
+            getWindow().setReenterTransition(slideTransition);
+            getWindow().setExitTransition(slideTransition);
+
+        }
+
     }
 
     private void loadTMContainer() {
@@ -102,7 +122,6 @@ public class MainActivity extends AppCompatActivity {
 
         // If the Strings are not the same, we need to download new data!
         if (!(myApp.getTMCardSet().equals(cardSetDownloaded))) {
-            Log.e("checkForAutoUpdate", "Downloading new cards!");
 
             /**
              * Before we start the intent service, specify an intent filter for the BroadcastReceiver
