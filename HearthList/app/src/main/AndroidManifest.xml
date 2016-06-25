@@ -38,7 +38,7 @@
             android:syncable="true" />
 
         <service
-            android:name=".DataDownloadIntentService"
+            android:name=".download.DataDownloadIntentService"
             android:exported="false" />
     </application>
 

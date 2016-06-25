@@ -2,10 +2,12 @@ package com.mattpflance.hearthlist;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -15,6 +17,8 @@ import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.tagmanager.ContainerHolder;
 import com.google.android.gms.tagmanager.TagManager;
+import com.mattpflance.hearthlist.download.DataDownloadIntentService;
+import com.mattpflance.hearthlist.download.DataDownloadResponseReceiver;
 
 import java.util.concurrent.TimeUnit;
 
@@ -94,6 +98,22 @@ public class MainActivity extends AppCompatActivity {
         // If the Strings are not the same, we need to download new data!
         if (!(currentCardSet.equals(cardSetDownloaded))) {
             Log.d("checkForAutoUpdate", "Downloading new cards!");
+
+            /**
+             * Before we start the intent service, specify an intent filter for the BroadcastReceiver
+             */
+
+            // Create intent filter and receiver
+            IntentFilter statusIntentFilter = new IntentFilter(
+                    DataDownloadResponseReceiver.BROADCAST_ACTION);
+            DataDownloadResponseReceiver responseReceiver = new DataDownloadResponseReceiver();
+
+            // Register intent filter and receiver with local broadcast manager
+            LocalBroadcastManager.getInstance(this).registerReceiver(
+                    responseReceiver,
+                    statusIntentFilter);
+
+            // Now start the service
             startService(new Intent(this, DataDownloadIntentService.class));
         }
     }

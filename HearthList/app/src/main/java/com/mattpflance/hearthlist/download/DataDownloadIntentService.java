@@ -1,23 +1,32 @@
-package com.mattpflance.hearthlist;
+package com.mattpflance.hearthlist.download;
 
 import android.app.IntentService;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.drawable.Drawable;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.FutureTarget;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SizeReadyCallback;
 import com.bumptech.glide.request.target.Target;
+import com.mattpflance.hearthlist.BuildConfig;
+import com.mattpflance.hearthlist.R;
 import com.mattpflance.hearthlist.data.HearthListContract;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Vector;
+import java.util.concurrent.ExecutionException;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -66,7 +75,7 @@ public class DataDownloadIntentService extends IntentService {
     private Cursor mCursor;
 
     public DataDownloadIntentService() {
-        super("com.mattpflance.hearthlist.DataDownloadIntentService");
+        super("com.mattpflance.hearthlist.download.DataDownloadIntentService");
     }
 
     @Override
@@ -82,19 +91,24 @@ public class DataDownloadIntentService extends IntentService {
         try {
             response = mClient.newCall(request).execute().body().string();
         } catch (IOException e) {
-            Log.e(LOG_TAG, "Request failed.");
-            // TODO send an error to the client via BroadcastReceiver
+            Intent localIntent = new Intent(DataDownloadResponseReceiver.BROADCAST_ACTION)
+                    .putExtra(
+                    DataDownloadResponseReceiver.STATUS,
+                    DataDownloadResponseReceiver.REQUEST_ERR);
+            LocalBroadcastManager.getInstance(this).sendBroadcast(localIntent);
             return;
         }
 
         // Check if the response is in JSON format, send error return otherwise
-
         JSONObject cardSets;
         try {
             cardSets = new JSONObject(response);
         } catch (JSONException e) {
-            Log.e(LOG_TAG, "Response is not in JSON format.");
-            // TODO send an error to the client via BroadcastReceiver
+            Intent localIntent = new Intent(DataDownloadResponseReceiver.BROADCAST_ACTION)
+                    .putExtra(
+                    DataDownloadResponseReceiver.STATUS,
+                    DataDownloadResponseReceiver.JSON_ERR);
+            LocalBroadcastManager.getInstance(this).sendBroadcast(localIntent);
             return;
         }
 
@@ -109,12 +123,6 @@ public class DataDownloadIntentService extends IntentService {
         downloadImages(IMAGE_TYPE_GOLD);
 
         mCursor.close();
-
-        // Store a boolean (for now) so we do not make a second API call after download starts
-        SharedPreferences prefs = getSharedPreferences(null, MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putString(getString(R.string.card_download_key), ""); // TODO temp
-        editor.apply();
     }
 
     private void downloadCardData(JSONObject cardSets) {
@@ -322,12 +330,28 @@ public class DataDownloadIntentService extends IntentService {
 
         do {
             // TODO DON'T download original size
-            Glide.with(this)
+            FutureTarget<File> future = Glide.with(this)
                     // Url becomes name of the file
                     .load((imageType == IMAGE_TYPE_REGULAR) ?
                             mCursor.getString(COLUMN_REG_URL) : mCursor.getString(COLUMN_GOLD_URL))
                     .downloadOnly(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL);
 
+            // Force a synchronous execution
+            try {
+                future.get();
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace();
+            }
+
         } while (mCursor.moveToNext());
+
+        if (imageType == IMAGE_TYPE_GOLD) {
+            // Successfully downloaded all images!
+            Intent localIntent = new Intent(DataDownloadResponseReceiver.BROADCAST_ACTION)
+                    .putExtra(
+                    DataDownloadResponseReceiver.STATUS,
+                    DataDownloadResponseReceiver.SUCCESS);
+            LocalBroadcastManager.getInstance(this).sendBroadcast(localIntent);
+        }
     }
 }
