@@ -17,6 +17,7 @@ import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.tagmanager.ContainerHolder;
 import com.google.android.gms.tagmanager.TagManager;
+import com.mattpflance.hearthlist.data.HearthListDbHelper;
 import com.mattpflance.hearthlist.download.DataDownloadIntentService;
 import com.mattpflance.hearthlist.download.DataDownloadResponseReceiver;
 
@@ -53,7 +54,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadTMContainer() {
-        mTagManager = ((HearthListApplication) getApplication()).getTagManager();
+        final HearthListApplication myApp = ((HearthListApplication) getApplication());
+
+        mTagManager = myApp.getTagManager();
 
         PendingResult pendingResult =
                 mTagManager.loadContainerPreferFresh(getString(R.string.gtm_default_string),
@@ -70,8 +73,13 @@ public class MainActivity extends AppCompatActivity {
 
                 containerHolder.refresh();
 
+                // Set the card
+                String cardSet = containerHolder.getContainer()
+                        .getString(getString(R.string.tag_manager_update_key));
+                myApp.setTMCardSet(cardSet);
+
                 // Load container holder
-                ((HearthListApplication) getApplication()).setContainerHolder(containerHolder);
+                myApp.setContainerHolder(containerHolder);
 
                 // Auto update cards if needed
                 checkForAutoUpdate();
@@ -86,18 +94,15 @@ public class MainActivity extends AppCompatActivity {
      */
     private void checkForAutoUpdate() {
 
+        HearthListApplication myApp = ((HearthListApplication) getApplication());
+
         // Gets whatever CardSet the app is up-to-date
         SharedPreferences prefs = getSharedPreferences(null, Context.MODE_PRIVATE);
         String cardSetDownloaded = prefs.getString(getString(R.string.card_download_key), "");
 
-        // Check TagManager to see what the current CardSet is
-        ContainerHolder holder = ((HearthListApplication) getApplication()).getContainerHolder();
-        String currentCardSet = holder.getContainer()
-                .getString(getString(R.string.tag_manager_update_key));
-
         // If the Strings are not the same, we need to download new data!
-        if (!(currentCardSet.equals(cardSetDownloaded))) {
-            Log.d("checkForAutoUpdate", "Downloading new cards!");
+        if (!(myApp.getTMCardSet().equals(cardSetDownloaded))) {
+            Log.e("checkForAutoUpdate", "Downloading new cards!");
 
             /**
              * Before we start the intent service, specify an intent filter for the BroadcastReceiver

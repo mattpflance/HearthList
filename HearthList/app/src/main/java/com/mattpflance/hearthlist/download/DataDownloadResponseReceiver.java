@@ -4,8 +4,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.util.Log;
 import android.widget.Toast;
 
+import com.mattpflance.hearthlist.HearthListApplication;
 import com.mattpflance.hearthlist.R;
 
 public class DataDownloadResponseReceiver extends BroadcastReceiver {
@@ -26,20 +28,20 @@ public class DataDownloadResponseReceiver extends BroadcastReceiver {
         Toast.makeText(context, "Intent Detected.", Toast.LENGTH_LONG).show();
         switch (status) {
             case REQUEST_ERR:
-                // stuff
+                // TODO handle error
                 break;
             case JSON_ERR:
-                // stuff
+                // TODO handle error
                 break;
             case SUCCESS:
-                // Store a boolean (for now) so we do not make a second API call after download starts
                 SharedPreferences prefs = context.getSharedPreferences(null, Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = prefs.edit();
-                editor.putString(context.getString(R.string.card_download_key), ""); // TODO temp
+                String cardSet = ((HearthListApplication) context.getApplicationContext()).getTMCardSet();
+                editor.putString(context.getString(R.string.card_download_key), cardSet);
                 editor.apply();
                 break;
             default:
-                // Unknown status
+                // TODO handle unknown status
                 break;
         }
     }

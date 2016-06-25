@@ -12,6 +12,7 @@ import com.google.android.gms.tagmanager.TagManager;
  */
 public class HearthListApplication extends Application {
 
+    public String mTMCardSet;
     public Tracker mTracker;
 
     public ContainerHolder mContainerHolder;
@@ -29,6 +30,12 @@ public class HearthListApplication extends Application {
     }
 
     public ContainerHolder getContainerHolder() { return mContainerHolder; }
+
+    public void setTMCardSet(String str) {
+        mTMCardSet = str;
+    }
+
+    public String getTMCardSet() { return mTMCardSet; }
 
     public void startTracking() {
         // Create the singleton Tracker
