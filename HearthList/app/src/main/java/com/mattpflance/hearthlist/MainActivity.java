@@ -15,7 +15,11 @@ import android.support.v7.widget.Toolbar;
 import android.transition.Slide;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.View;
 
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.tagmanager.ContainerHolder;
@@ -29,6 +33,8 @@ import java.util.concurrent.TimeUnit;
 public class MainActivity extends AppCompatActivity {
 
     TagManager mTagManager;
+
+    private AdView mBannerAd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +62,30 @@ public class MainActivity extends AppCompatActivity {
             tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
             tabLayout.setupWithViewPager(viewPager);
         }
+
+        mBannerAd = (AdView) findViewById(R.id.banner_ad);
+        AdRequest request = new AdRequest.Builder().build();
+        mBannerAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdFailedToLoad(int i) {
+                mBannerAd.setVisibility(View.GONE);
+                super.onAdFailedToLoad(i);
+            }
+
+            @Override
+            public void onAdLoaded() {
+                mBannerAd.setVisibility(View.VISIBLE);
+                super.onAdLoaded();
+            }
+
+            @Override
+            public void onAdOpened() {
+                // TODO add analytic tracking
+                super.onAdOpened();
+            }
+        });
+        mBannerAd.loadAd(request);
+        mBannerAd.setVisibility(View.GONE);
     }
 
     private void initTransitions() {
