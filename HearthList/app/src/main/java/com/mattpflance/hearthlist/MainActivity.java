@@ -115,6 +115,8 @@ public class MainActivity extends AppCompatActivity implements CardsFragment.Car
                         .commit();
             }
 
+        } else {
+            mTwoPane = false;
         }
     }
 
