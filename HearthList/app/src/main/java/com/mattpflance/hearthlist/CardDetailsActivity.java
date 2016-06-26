@@ -21,8 +21,6 @@ public class CardDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_card_details);
 
-        initTransitions();
-
         // Get the card and setup the ActionBar
         Card card = getIntent().getParcelableExtra(CARD_ARG_ID);
 
@@ -66,22 +64,7 @@ public class CardDetailsActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        // Only want this animation for API Level < 16
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP)
-            overridePendingTransition(R.anim.left_to_right, R.anim.bottom_to_top);
+        overridePendingTransition(R.anim.left_to_right, R.anim.bottom_to_top);
     }
 
-    private void initTransitions() {
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-
-            Slide slideTransition = new Slide();
-            slideTransition.setSlideEdge(Gravity.TOP);
-            slideTransition.setDuration(500);
-            getWindow().setEnterTransition(slideTransition);
-            getWindow().setExitTransition(slideTransition);
-
-        }
-
-    }
 }

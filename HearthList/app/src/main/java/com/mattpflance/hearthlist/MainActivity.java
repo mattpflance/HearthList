@@ -7,15 +7,19 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.transition.Slide;
+import android.transition.Transition;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.view.Window;
 
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
@@ -41,8 +45,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        initTransitions();
-
         // Track for Analytics
         ((HearthListApplication) getApplication()).startTracking();
 
@@ -59,48 +61,35 @@ public class MainActivity extends AppCompatActivity {
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         if (tabLayout != null) {
-            tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
-            tabLayout.setupWithViewPager(viewPager);
+            tabLayout.setTabGravity(TabLayout.GRAVITY_CENTER);
+            tabLayout.setupWithViewPager(viewPager, true);
         }
 
         mBannerAd = (AdView) findViewById(R.id.banner_ad);
-        AdRequest request = new AdRequest.Builder().build();
-        mBannerAd.setAdListener(new AdListener() {
-            @Override
-            public void onAdFailedToLoad(int i) {
-                mBannerAd.setVisibility(View.GONE);
-                super.onAdFailedToLoad(i);
-            }
+        if (mBannerAd != null) {
+            AdRequest request = new AdRequest.Builder().build();
+            mBannerAd.setAdListener(new AdListener() {
+                @Override
+                public void onAdFailedToLoad(int i) {
+                    mBannerAd.setVisibility(View.GONE);
+                    super.onAdFailedToLoad(i);
+                }
 
-            @Override
-            public void onAdLoaded() {
-                mBannerAd.setVisibility(View.VISIBLE);
-                super.onAdLoaded();
-            }
+                @Override
+                public void onAdLoaded() {
+                    mBannerAd.setVisibility(View.VISIBLE);
+                    super.onAdLoaded();
+                }
 
-            @Override
-            public void onAdOpened() {
-                // TODO add analytic tracking
-                super.onAdOpened();
-            }
-        });
-        mBannerAd.loadAd(request);
-        mBannerAd.setVisibility(View.GONE);
-    }
-
-    private void initTransitions() {
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-
-            Slide slideTransition = new Slide();
-            // Gravity.START is an invalid slide direction
-            slideTransition.setSlideEdge(Gravity.LEFT);
-            slideTransition.setDuration(500);
-            getWindow().setReenterTransition(slideTransition);
-            getWindow().setExitTransition(slideTransition);
-
+                @Override
+                public void onAdOpened() {
+                    // TODO add analytic tracking
+                    super.onAdOpened();
+                }
+            });
+            mBannerAd.loadAd(request);
+            mBannerAd.setVisibility(View.GONE);
         }
-
     }
 
     private void loadTMContainer() {

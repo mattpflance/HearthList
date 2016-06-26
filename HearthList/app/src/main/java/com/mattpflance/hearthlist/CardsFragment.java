@@ -71,7 +71,7 @@ public class CardsFragment extends Fragment implements LoaderManager.LoaderCallb
         mRecyclerView = (RecyclerView) view.findViewById(R.id.cards_recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setHasFixedSize(true);
-        ((SimpleItemAnimator) mRecyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
+        //((SimpleItemAnimator) mRecyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
 
         mEmptyView = (TextView) view.findViewById(R.id.cards_recycler_empty_view);
 
@@ -81,16 +81,8 @@ public class CardsFragment extends Fragment implements LoaderManager.LoaderCallb
                 Intent intent = new Intent(getActivity(), CardDetailsActivity.class);
                 Card card = (cursor != null) ? new Card(cursor) : null;
                 intent.putExtra(CardDetailsActivity.CARD_ARG_ID, card);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    // Start Activity with Transitions
-                    Bundle bundle = ActivityOptions
-                            .makeSceneTransitionAnimation(getActivity())
-                            .toBundle();
-                    startActivity(intent, bundle);
-                } else {
-                    startActivity(intent);
-                    getActivity().overridePendingTransition(R.anim.top_to_bottom, R.anim.right_to_left);
-                }
+                startActivity(intent);
+                getActivity().overridePendingTransition(R.anim.top_to_bottom, R.anim.right_to_left);
             }
         }, mEmptyView);
 
@@ -147,6 +139,6 @@ public class CardsFragment extends Fragment implements LoaderManager.LoaderCallb
     private void showDialog() {
         CardFiltersDialog dialog = CardFiltersDialog.newInstance(mSelectionArgs);
         dialog.setTargetFragment(this, CardFiltersDialog.FILTER_CODE);
-        dialog.show(getFragmentManager(), null);
+        dialog.show(getChildFragmentManager(), null);
     }
 }

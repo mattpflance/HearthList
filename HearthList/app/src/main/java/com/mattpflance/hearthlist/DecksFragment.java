@@ -118,6 +118,6 @@ public class DecksFragment extends Fragment implements LoaderManager.LoaderCallb
     private void showDialog() {
         DeckCreationDialog dialog = new DeckCreationDialog();
         dialog.setTargetFragment(this, DeckCreationDialog.CREATION_CODE);
-        dialog.show(getFragmentManager(), null);
+        dialog.show(getChildFragmentManager(), null);
     }
 }

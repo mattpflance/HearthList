@@ -28,7 +28,8 @@
         </activity>
         <activity
             android:name=".CardDetailsActivity"
-            android:parentActivityName="com.mattpflance.hearthlist.MainActivity">
+            android:parentActivityName=".MainActivity">
+
             <!-- Support for Android 4.0 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -41,14 +42,17 @@
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" />
 
         <!-- Widget data -->
-        <receiver android:name=".widget.WidgetProvider" >
+        <receiver android:name=".widget.WidgetProvider">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="com.mattpflance.hearthlist.ACTION_DATA_CHANGED" />
             </intent-filter>
-            <meta-data android:name="android.appwidget.provider"
+
+            <meta-data
+                android:name="android.appwidget.provider"
                 android:resource="@xml/appwidget_info" />
         </receiver>
+
         <service android:name=".widget.WidgetIntentService" />
 
         <provider
@@ -60,6 +64,7 @@
         <service
             android:name=".download.DataDownloadIntentService"
             android:exported="false" />
+
     </application>
 
 </manifest>
