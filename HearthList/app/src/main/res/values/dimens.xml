@@ -18,4 +18,10 @@
     <dimen name="class_color_view_width">12dp</dimen>
     <dimen name="icon_view_width">20dp</dimen>
 
+    <!-- Widget Dimens -->
+    <!-- n cells = 70ndp - 30dp -->
+    <dimen name="widget_default_height">110dp</dimen>
+    <dimen name="widget_default_width">110dp</dimen>
+    <dimen name="widget_padding">8dp</dimen>
+
 </resources>

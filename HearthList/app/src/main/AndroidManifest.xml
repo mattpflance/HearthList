@@ -39,7 +39,18 @@
         <activity
             android:name="com.google.android.gms.ads.AdActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" />
-        
+
+        <!-- Widget data -->
+        <receiver android:name=".widget.WidgetProvider" >
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="com.mattpflance.hearthlist.ACTION_DATA_CHANGED" />
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider"
+                android:resource="@xml/appwidget_info" />
+        </receiver>
+        <service android:name=".widget.WidgetIntentService" />
+
         <provider
             android:name=".data.HearthListProvider"
             android:authorities="com.mattpflance.hearthlist"

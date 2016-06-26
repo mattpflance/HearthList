@@ -68,4 +68,8 @@
     <!-- AdMob -->
     <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
 
+    <!-- Widget -->
+    <string name="card_of_the_day">Card of the Day</string>
+    <string name="widget_image_content_desc">The card of the day</string>
+
 </resources>
