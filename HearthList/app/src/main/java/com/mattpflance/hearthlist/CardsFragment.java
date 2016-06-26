@@ -1,6 +1,8 @@
 package com.mattpflance.hearthlist;
 
+import android.app.Activity;
 import android.app.ActivityOptions;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Build;
@@ -28,6 +30,12 @@ import java.util.ArrayList;
  * Fragment that displays HearthStone cards
  */
 public class CardsFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+
+    public interface CardsFragmentCallback {
+        void loadDetailFragment(Card card);
+    }
+
+    private CardsFragmentCallback mCallback;
 
     // For selection args
     public static final int ARGS_MIN_MANA = 0;
@@ -63,6 +71,20 @@ public class CardsFragment extends Fragment implements LoaderManager.LoaderCallb
     }
 
     @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        mCallback = (CardsFragmentCallback) context;
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        mCallback = (CardsFragmentCallback) activity;
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
@@ -78,11 +100,15 @@ public class CardsFragment extends Fragment implements LoaderManager.LoaderCallb
         mCardsAdapter = new CardsAdapter(getActivity(), new CardsAdapter.CardsAdapterOnClickHandler() {
             @Override
             public void onClick(Cursor cursor) {
-                Intent intent = new Intent(getActivity(), CardDetailsActivity.class);
                 Card card = (cursor != null) ? new Card(cursor) : null;
-                intent.putExtra(CardDetailsActivity.CARD_ARG_ID, card);
-                startActivity(intent);
-                getActivity().overridePendingTransition(R.anim.top_to_bottom, R.anim.right_to_left);
+                if (MainActivity.mTwoPane) {
+                    mCallback.loadDetailFragment(card);
+                } else {
+                    Intent intent = new Intent(getActivity(), CardDetailsActivity.class);
+                    intent.putExtra(CardDetailsActivity.CARD_ARG_ID, card);
+                    startActivity(intent);
+                    getActivity().overridePendingTransition(R.anim.top_to_bottom, R.anim.right_to_left);
+                }
             }
         }, mEmptyView);
 

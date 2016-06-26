@@ -4,6 +4,6 @@
     <!-- Layout to display -->
     <dimen name="cards_horz_margin">100dp</dimen>
 
-    <dimen name="recyclerview_top_margin">96dp</dimen>
+    <dimen name="recyclerview_top_margin">52dp</dimen>
 
 </resources>

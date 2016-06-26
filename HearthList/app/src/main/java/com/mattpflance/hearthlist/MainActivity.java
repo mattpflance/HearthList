@@ -22,14 +22,20 @@ import com.google.android.gms.tagmanager.ContainerHolder;
 import com.google.android.gms.tagmanager.TagManager;
 import com.mattpflance.hearthlist.download.DataDownloadIntentService;
 import com.mattpflance.hearthlist.download.DataDownloadResponseReceiver;
+import com.mattpflance.hearthlist.models.Card;
 
 import java.util.concurrent.TimeUnit;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements CardsFragment.CardsFragmentCallback {
+
+    private static final String DETAILS_TAG = "DTAG";
 
     TagManager mTagManager;
 
     private AdView mBannerAd;
+    private CardDetailsFragment mCardDetailsFragment;
+
+    public static boolean mTwoPane;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,16 +51,19 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        ViewPager viewPager = (ViewPager) findViewById(R.id.view_pager);
-        PagerAdapter pagerAdapter = new PagerAdapter(getSupportFragmentManager(), this);
-        if (viewPager != null)
-            viewPager.setAdapter(pagerAdapter);
-
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
-        if (tabLayout != null) {
-            tabLayout.setTabGravity(TabLayout.GRAVITY_CENTER);
-            tabLayout.setupWithViewPager(viewPager, true);
-        }
+        /**
+         * Removing ViewPager along with DeckFragment
+         */
+//        ViewPager viewPager = (ViewPager) findViewById(R.id.view_pager);
+//        PagerAdapter pagerAdapter = new PagerAdapter(getSupportFragmentManager(), this);
+//        if (viewPager != null)
+//            viewPager.setAdapter(pagerAdapter);
+//
+//        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+//        if (tabLayout != null) {
+//            tabLayout.setTabGravity(TabLayout.GRAVITY_CENTER);
+//            tabLayout.setupWithViewPager(viewPager, true);
+//        }
 
         mBannerAd = (AdView) findViewById(R.id.banner_ad);
         if (mBannerAd != null) {
@@ -80,6 +89,32 @@ public class MainActivity extends AppCompatActivity {
             });
             mBannerAd.loadAd(request);
             mBannerAd.setVisibility(View.GONE);
+        }
+
+        // Insert CardsFragment
+        if (savedInstanceState == null) {
+            SharedPreferences prefs = getSharedPreferences(null, Context.MODE_PRIVATE);
+            int minMana = prefs.getInt(getString(R.string.min_mana_key), 0);
+            int maxMana = prefs.getInt(getString(R.string.max_mana_key), 99);
+            CardsFragment frag = CardsFragment.newInstance(minMana, maxMana);
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.container_card_list, frag)
+                    .commit();
+        }
+
+
+        // Check if Tablet
+        if (findViewById(R.id.container_card_details) != null) {
+
+            mTwoPane = true;
+
+            if (savedInstanceState == null) {
+                mCardDetailsFragment = CardDetailsFragment.newInstance();
+                getSupportFragmentManager().beginTransaction()
+                        .add(R.id.container_card_details, mCardDetailsFragment, DETAILS_TAG)
+                        .commit();
+            }
+
         }
     }
 
@@ -150,6 +185,16 @@ public class MainActivity extends AppCompatActivity {
             // Now start the service
             startService(new Intent(this, DataDownloadIntentService.class));
         }
+    }
+
+    public void loadDetailFragment(Card card) {
+        mCardDetailsFragment = CardDetailsFragment.newInstance();
+        Bundle args = new Bundle();
+        args.putParcelable(CardDetailsActivity.CARD_ARG_ID, card);
+        mCardDetailsFragment.setArguments(args);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.container_card_details, mCardDetailsFragment, DETAILS_TAG)
+                .commit();
     }
 
 }

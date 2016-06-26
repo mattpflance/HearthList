@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- Layout to display
-    <item name="main_layout" type="layout">@layout/content_main_phone</item>
-    -->
+    <!-- Layout to display -->
+    <item name="main_layout" type="layout">@layout/content_main_tablet</item>
+
     <dimen name="cards_horz_margin">100dp</dimen>
 
     <dimen name="recyclerview_top_margin">68dp</dimen>
+
+    <dimen name="card_list_tablet_width">500dp</dimen>
 
 </resources>

@@ -19,7 +19,7 @@ android {
     }
     buildTypes.each {
         it.buildConfigField 'String', 'MASHAPE_HEARTHSTONE_API_KEY',
-                '"iwKlxdymchmshLihrsyNMM9TDw47p1SCt3CjsnLXnOpT9JmQBh"'
+                MyMashapeHearthstoneApiKey
     }
 }
 

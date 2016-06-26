@@ -13,19 +13,30 @@
 
     <FrameLayout
         android:id="@+id/container_card_list"
-        android:layout_width="match_parent"
+        android:layout_width="@dimen/card_list_tablet_width"
         android:layout_height="match_parent"
         android:layout_alignParentTop="true"
         android:layout_above="@id/banner_ad"
         android:layout_marginTop="@dimen/recyclerview_top_margin" />
-<!--
-    <android.support.v4.view.ViewPager
-        android:id="@+id/view_pager"
+
+    <FrameLayout
+        android:id="@+id/container_card_details"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentTop="true"
+        android:layout_toRightOf="@id/container_card_list"
+        android:layout_toEndOf="@id/container_card_list"
         android:layout_above="@id/banner_ad"
         android:layout_marginTop="@dimen/recyclerview_top_margin" />
--->
+
+    <!--
+        <android.support.v4.view.ViewPager
+            android:id="@+id/view_pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentTop="true"
+            android:layout_above="@id/banner_ad"
+            android:layout_marginTop="@dimen/recyclerview_top_margin" />
+    -->
 </RelativeLayout>
 
