@@ -1,14 +1,9 @@
 package com.mattpflance.hearthlist;
 
-import android.os.Build;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.transition.Slide;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.MenuItem;
-import android.view.animation.AnimationUtils;
 
 import com.mattpflance.hearthlist.models.Card;
 

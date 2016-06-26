@@ -1,0 +1,7 @@
+<resources>
+
+    <dimen name="img_length">60dp</dimen>
+    <dimen name="img_crop_left">45dp</dimen>
+    <dimen name="img_crop_top">50dp</dimen>
+
+</resources>
