@@ -123,6 +123,13 @@ public class DataDownloadIntentService extends IntentService {
         downloadImages(IMAGE_TYPE_GOLD);
 
         mCursor.close();
+
+        // Send the intent to register we are downloading and not to download again
+        Intent localIntent = new Intent(DataDownloadResponseReceiver.BROADCAST_ACTION)
+                    .putExtra(
+                    DataDownloadResponseReceiver.STATUS,
+                    DataDownloadResponseReceiver.SUCCESS);
+            LocalBroadcastManager.getInstance(this).sendBroadcast(localIntent);
     }
 
     private void downloadCardData(JSONObject cardSets) {
@@ -330,28 +337,29 @@ public class DataDownloadIntentService extends IntentService {
 
         do {
             // TODO DON'T download original size
-            FutureTarget<File> future = Glide.with(this)
+            //FutureTarget<File> future =
+            Glide.with(this)
                     // Url becomes name of the file
                     .load((imageType == IMAGE_TYPE_REGULAR) ?
                             mCursor.getString(COLUMN_REG_URL) : mCursor.getString(COLUMN_GOLD_URL))
                     .downloadOnly(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL);
 
             // Force a synchronous execution
-            try {
-                future.get();
-            } catch (InterruptedException | ExecutionException e) {
-                e.printStackTrace();
-            }
+//            try {
+//                future.get();
+//            } catch (InterruptedException | ExecutionException e) {
+//                e.printStackTrace();
+//            }
 
         } while (mCursor.moveToNext());
 
-        if (imageType == IMAGE_TYPE_GOLD) {
-            // Successfully downloaded all images!
-            Intent localIntent = new Intent(DataDownloadResponseReceiver.BROADCAST_ACTION)
-                    .putExtra(
-                    DataDownloadResponseReceiver.STATUS,
-                    DataDownloadResponseReceiver.SUCCESS);
-            LocalBroadcastManager.getInstance(this).sendBroadcast(localIntent);
-        }
+//        if (imageType == IMAGE_TYPE_GOLD) {
+//            // Successfully downloaded all images!
+//            Intent localIntent = new Intent(DataDownloadResponseReceiver.BROADCAST_ACTION)
+//                    .putExtra(
+//                    DataDownloadResponseReceiver.STATUS,
+//                    DataDownloadResponseReceiver.SUCCESS);
+//            LocalBroadcastManager.getInstance(this).sendBroadcast(localIntent);
+//        }
     }
 }
