@@ -35,7 +35,8 @@ public class MainActivity extends AppCompatActivity implements CardsFragment.Car
     private AdView mBannerAd;
     private CardDetailsFragment mCardDetailsFragment;
 
-    public static boolean mTwoPane;
+    public static boolean TwoPane;
+    public static int CurrentPosition = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,7 +107,7 @@ public class MainActivity extends AppCompatActivity implements CardsFragment.Car
         // Check if Tablet
         if (findViewById(R.id.container_card_details) != null) {
 
-            mTwoPane = true;
+            TwoPane = true;
 
             if (savedInstanceState == null) {
                 mCardDetailsFragment = CardDetailsFragment.newInstance();
@@ -116,7 +117,7 @@ public class MainActivity extends AppCompatActivity implements CardsFragment.Car
             }
 
         } else {
-            mTwoPane = false;
+            TwoPane = false;
         }
     }
 

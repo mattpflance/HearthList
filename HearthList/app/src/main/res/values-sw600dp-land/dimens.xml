@@ -1,0 +1,6 @@
+<resources>
+
+    <!-- Dialogs -->
+    <dimen name="filters_horz_padding">160dp</dimen>
+
+</resources>

@@ -7,7 +7,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="20dp">
+        android:paddingLeft="@dimen/filters_horz_padding"
+        android:paddingStart="@dimen/filters_horz_padding"
+        android:paddingRight="@dimen/filters_horz_padding"
+        android:paddingEnd="@dimen/filters_horz_padding">
 
         <TextView
             android:layout_width="match_parent"

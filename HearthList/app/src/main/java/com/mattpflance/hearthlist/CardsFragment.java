@@ -101,8 +101,10 @@ public class CardsFragment extends Fragment implements LoaderManager.LoaderCallb
             @Override
             public void onClick(Cursor cursor) {
                 Card card = (cursor != null) ? new Card(cursor) : null;
-                if (MainActivity.mTwoPane) {
+                MainActivity.CurrentPosition = (cursor != null) ? cursor.getPosition() : 0;
+                if (MainActivity.TwoPane) {
                     mCallback.loadDetailFragment(card);
+                    mCardsAdapter.notifyDataSetChanged();
                 } else {
                     Intent intent = new Intent(getActivity(), CardDetailsActivity.class);
                     intent.putExtra(CardDetailsActivity.CARD_ARG_ID, card);
@@ -134,10 +136,10 @@ public class CardsFragment extends Fragment implements LoaderManager.LoaderCallb
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
+    public void onResume() {
         // Init the loader
+        super.onResume();
         getLoaderManager().initLoader(CARD_LOADER, null, this);
-        super.onActivityCreated(savedInstanceState);
     }
 
     @Override
@@ -165,6 +167,6 @@ public class CardsFragment extends Fragment implements LoaderManager.LoaderCallb
     private void showDialog() {
         CardFiltersDialog dialog = CardFiltersDialog.newInstance(mSelectionArgs);
         dialog.setTargetFragment(this, CardFiltersDialog.FILTER_CODE);
-        dialog.show(getChildFragmentManager(), null);
+        dialog.show(getFragmentManager(), null);
     }
 }

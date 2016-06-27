@@ -161,6 +161,15 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.CardsAdapter
         // Set card text
         String cardText = mCursor.getString(Card.COL_TEXT);
         cardsAdapterVh.mCardDescView.setText(cardText == null ? null : Html.fromHtml(cardText));
+
+        // Set card details colour
+        if (MainActivity.TwoPane && MainActivity.CurrentPosition == position) {
+            cardsAdapterVh.mCardDetailsLayout
+                    .setBackgroundColor(ContextCompat.getColor(mContext,R.color.colorAccent));
+        } else {
+            cardsAdapterVh.mCardDetailsLayout
+                    .setBackgroundColor(ContextCompat.getColor(mContext,R.color.white));
+        }
     }
 
     @Override
