@@ -28,4 +28,7 @@
     <dimen name="widget_default_width">110dp</dimen>
     <dimen name="widget_padding">8dp</dimen>
 
+    <!-- Tablet -->
+    <dimen name="card_list_tablet_width">500dp</dimen>
+
 </resources>

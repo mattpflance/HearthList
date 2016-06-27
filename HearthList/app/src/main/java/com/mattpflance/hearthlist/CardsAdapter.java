@@ -26,6 +26,8 @@ import com.mattpflance.hearthlist.models.Card;
  */
 public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.CardsAdapterViewHolder> {
 
+    private CardsFragment.CardsFragmentCallback mCallback;
+
     private Cursor mCursor;
     private final Context mContext;
     private final CardsAdapterOnClickHandler mClickHandler;
@@ -78,10 +80,12 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.CardsAdapter
     }
 
 
-    public CardsAdapter(Context context, CardsAdapterOnClickHandler onClickHandler, View emptyView) {
+    public CardsAdapter(Context context, CardsAdapterOnClickHandler onClickHandler, View emptyView,
+                        CardsFragment.CardsFragmentCallback callback) {
         mContext = context;
         mClickHandler = onClickHandler;
         mEmptyView = emptyView;
+        mCallback = callback;
     }
 
 
@@ -166,6 +170,7 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.CardsAdapter
         if (MainActivity.TwoPane && MainActivity.CurrentPosition == position) {
             cardsAdapterVh.mCardDetailsLayout
                     .setBackgroundColor(ContextCompat.getColor(mContext,R.color.colorAccent));
+            mCallback.loadDetailFragment(new Card(mCursor));
         } else {
             cardsAdapterVh.mCardDetailsLayout
                     .setBackgroundColor(ContextCompat.getColor(mContext,R.color.white));
@@ -279,4 +284,6 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.CardsAdapter
             return "com.mattpflance.hearthlist.CardsAdapterImageTransformation";
         }
     }
+
+    public Cursor getCursor() { return mCursor; }
 }

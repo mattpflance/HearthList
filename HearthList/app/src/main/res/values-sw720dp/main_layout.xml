@@ -5,7 +5,8 @@
     <item name="main_layout" type="layout">@layout/content_main_tablet</item>
 
     <dimen name="cards_horz_margin">4dp</dimen>
-
     <dimen name="recyclerview_top_margin">68dp</dimen>
+
+    <dimen name="card_list_tablet_width">400dp</dimen>
 
 </resources>

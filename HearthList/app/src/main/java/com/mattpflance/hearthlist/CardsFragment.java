@@ -25,6 +25,7 @@ import com.mattpflance.hearthlist.dialogs.CardFiltersDialog;
 import com.mattpflance.hearthlist.models.Card;
 
 import java.util.ArrayList;
+import java.util.logging.Handler;
 
 /**
  * Fragment that displays HearthStone cards
@@ -103,7 +104,6 @@ public class CardsFragment extends Fragment implements LoaderManager.LoaderCallb
                 Card card = (cursor != null) ? new Card(cursor) : null;
                 MainActivity.CurrentPosition = (cursor != null) ? cursor.getPosition() : 0;
                 if (MainActivity.TwoPane) {
-                    mCallback.loadDetailFragment(card);
                     mCardsAdapter.notifyDataSetChanged();
                 } else {
                     Intent intent = new Intent(getActivity(), CardDetailsActivity.class);
@@ -112,7 +112,7 @@ public class CardsFragment extends Fragment implements LoaderManager.LoaderCallb
                     getActivity().overridePendingTransition(R.anim.top_to_bottom, R.anim.right_to_left);
                 }
             }
-        }, mEmptyView);
+        }, mEmptyView, mCallback);
 
         mRecyclerView.setAdapter(mCardsAdapter);
 
@@ -131,6 +131,7 @@ public class CardsFragment extends Fragment implements LoaderManager.LoaderCallb
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == CardFiltersDialog.FILTER_CODE) {
             mSelectionArgs = data.getStringArrayListExtra(CardFiltersDialog.SELECTION_ARG_KEY);
+            MainActivity.CurrentPosition = 0;
             getLoaderManager().restartLoader(CARD_LOADER, null, this);
         }
     }
