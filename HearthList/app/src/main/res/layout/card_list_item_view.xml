@@ -2,15 +2,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="?android:attr/listPreferredItemHeightLarge"
-    android:layout_marginTop="2dp"
-    android:layout_marginBottom="2dp"
-    android:layout_marginRight="4dp"
-    android:layout_marginEnd="4dp"
-    android:layout_marginLeft="4dp"
-    android:layout_marginStart="4dp"
+    android:layout_marginTop="@dimen/vert_outer_margin"
+    android:layout_marginBottom="@dimen/vert_outer_margin"
+    android:layout_marginRight="@dimen/horz_outer_margin"
+    android:layout_marginEnd="@dimen/horz_outer_margin"
+    android:layout_marginLeft="@dimen/horz_outer_margin"
+    android:layout_marginStart="@dimen/horz_outer_margin"
     android:clickable="true"
     android:focusable="true"
-    app:cardElevation="4dp">
+    app:cardElevation="@dimen/app_bar_elevation">
 
     <RelativeLayout
         android:layout_width="match_parent"

@@ -15,6 +15,9 @@
     <dimen name="horz_inner_text_padding">4dp</dimen>
     <dimen name="vert_inner_text_padding">2dp</dimen>
 
+    <dimen name="vert_outer_margin">2dp</dimen>
+    <dimen name="horz_outer_margin">4dp</dimen>
+
     <dimen name="class_color_view_width">12dp</dimen>
     <dimen name="icon_view_width">20dp</dimen>
 
