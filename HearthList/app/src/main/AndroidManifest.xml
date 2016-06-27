@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.mattpflance.hearthlist">
+    package="com.mattpflance.hearthlist" >
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -11,7 +11,7 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme" >
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
@@ -19,7 +19,7 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -28,7 +28,7 @@
         </activity>
         <activity
             android:name=".CardDetailsActivity"
-            android:parentActivityName=".MainActivity">
+            android:parentActivityName=".MainActivity" >
 
             <!-- Support for Android 4.0 and lower -->
             <meta-data
@@ -42,7 +42,7 @@
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" />
 
         <!-- Widget data -->
-        <receiver android:name=".widget.WidgetProvider">
+        <receiver android:name=".widget.WidgetProvider" >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="com.mattpflance.hearthlist.ACTION_DATA_CHANGED" />
@@ -64,7 +64,6 @@
         <service
             android:name=".download.DataDownloadIntentService"
             android:exported="false" />
-
     </application>
 
 </manifest>

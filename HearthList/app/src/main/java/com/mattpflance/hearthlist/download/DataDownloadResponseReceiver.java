@@ -17,7 +17,8 @@ public class DataDownloadResponseReceiver extends BroadcastReceiver {
 
     public static final int REQUEST_ERR = 0;
     public static final int JSON_ERR = 1;
-    public static final int SUCCESS = 2;
+    public static final int NO_INTERNET = 2;
+    public static final int SUCCESS = 3;
 
     public DataDownloadResponseReceiver() {
     }
@@ -25,13 +26,15 @@ public class DataDownloadResponseReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         int status = intent.getIntExtra(STATUS, 0);
-        Toast.makeText(context, "Intent Detected.", Toast.LENGTH_LONG).show();
         switch (status) {
             case REQUEST_ERR:
-                // TODO handle error
+                // App will try again
                 break;
             case JSON_ERR:
-                // TODO handle error
+                // App will try again
+                break;
+            case NO_INTERNET:
+                // App will try again
                 break;
             case SUCCESS:
                 SharedPreferences prefs = context.getSharedPreferences(null, Context.MODE_PRIVATE);
@@ -41,7 +44,7 @@ public class DataDownloadResponseReceiver extends BroadcastReceiver {
                 editor.apply();
                 break;
             default:
-                // TODO handle unknown status
+                // App will try again
                 break;
         }
     }
