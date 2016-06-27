@@ -16,6 +16,7 @@ import com.bumptech.glide.request.target.SizeReadyCallback;
 import com.bumptech.glide.request.target.Target;
 import com.mattpflance.hearthlist.BuildConfig;
 import com.mattpflance.hearthlist.R;
+import com.mattpflance.hearthlist.Utility;
 import com.mattpflance.hearthlist.data.HearthListContract;
 
 import org.json.JSONArray;
@@ -80,6 +81,17 @@ public class DataDownloadIntentService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
+
+        if (!Utility.isConnectedToInternet(this)) {
+            Intent localIntent = new Intent(DataDownloadResponseReceiver.BROADCAST_ACTION)
+                    .putExtra(
+                            DataDownloadResponseReceiver.STATUS,
+                            DataDownloadResponseReceiver.NO_INTERNET);
+            LocalBroadcastManager.getInstance(this).sendBroadcast(localIntent);
+            this.startService(intent);
+            return;
+        }
+
         OkHttpClient mClient = new OkHttpClient();
 
         Request request = new Request.Builder()
