@@ -98,7 +98,7 @@
                         android:orientation="horizontal"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="#b4b4b1">
+                        android:background="@color/details_body_color">
 
                         <TextView
                             android:layout_width="@dimen/detail_name_width"
@@ -125,7 +125,7 @@
                         android:orientation="horizontal"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="#b4b4b1">
+                        android:background="@color/details_body_color">
 
                         <TextView
                             android:layout_width="@dimen/detail_name_width"
@@ -152,7 +152,7 @@
                         android:orientation="horizontal"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="#b4b4b1">
+                        android:background="@color/details_body_color">
 
                         <TextView
                             android:layout_width="@dimen/detail_name_width"
@@ -179,7 +179,7 @@
                         android:orientation="horizontal"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="#b4b4b1">
+                        android:background="@color/details_body_color">
 
                         <TextView
                             android:layout_width="@dimen/detail_name_width"
@@ -206,7 +206,7 @@
                         android:orientation="horizontal"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="#b4b4b1">
+                        android:background="@color/details_body_color">
 
                         <TextView
                             android:layout_width="@dimen/detail_name_width"
@@ -233,7 +233,7 @@
                         android:orientation="horizontal"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="#b4b4b1">
+                        android:background="@color/details_body_color">
 
                         <TextView
                             android:layout_width="@dimen/detail_name_width"
@@ -259,7 +259,7 @@
                         android:orientation="vertical"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="#cdcdcb">
+                        android:background="@color/details_flavor_color">
 
                         <TextView
                             android:id="@+id/artist"

@@ -57,4 +57,8 @@
     <color name="white">#FFF</color>
     <color name="black">#000</color>
 
+    <!-- Card Details -->
+    <color name="details_body_color">#b4b4b1</color>
+    <color name="details_flavor_color">#cdcdcb</color>
+
 </resources>

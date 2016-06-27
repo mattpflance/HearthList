@@ -34,4 +34,7 @@
     <!-- Tablet -->
     <dimen name="card_list_tablet_width">500dp</dimen>
 
+    <!-- Dialog Dimens -->
+    <dimen name="filters_horz_padding">16dp</dimen>
+
 </resources>
