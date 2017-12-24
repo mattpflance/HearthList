@@ -1,5 +1,8 @@
-# Capstone Project
+# HearthList
 
-An app for Blizzard's game HearthStone that displays all cards and allows users to create and save decks.
+An app for Blizzard's game HearthStone that displays all cards and will eventually allow users to create and save decks.
 
-Download the zip and install HearthList in Android Studio.
+## Screenshots
+![Alt text](/screenshots/main.png)
+
+![Alt text](/screenshots/details.png)

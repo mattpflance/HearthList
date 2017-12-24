@@ -13,31 +13,27 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.transition.Slide;
-import android.util.Log;
 import android.view.Gravity;
-import android.view.View;
 
-import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.tagmanager.ContainerHolder;
 import com.google.android.gms.tagmanager.TagManager;
-import com.mattpflance.hearthlist.data.HearthListDbHelper;
 import com.mattpflance.hearthlist.download.DataDownloadIntentService;
 import com.mattpflance.hearthlist.download.DataDownloadResponseReceiver;
 
 import java.util.concurrent.TimeUnit;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity
+{
 
     TagManager mTagManager;
 
-    private AdView mBannerAd;
+//    private AdView mBannerAd;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -49,46 +45,47 @@ public class MainActivity extends AppCompatActivity {
         // Set up TagManager & ContainerHolder
         loadTMContainer();
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        ViewPager viewPager = (ViewPager) findViewById(R.id.view_pager);
+        ViewPager viewPager = findViewById(R.id.view_pager);
         PagerAdapter pagerAdapter = new PagerAdapter(getSupportFragmentManager(), this);
         if (viewPager != null)
             viewPager.setAdapter(pagerAdapter);
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        TabLayout tabLayout = findViewById(R.id.tab_layout);
         if (tabLayout != null) {
             tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
             tabLayout.setupWithViewPager(viewPager);
         }
 
-        mBannerAd = (AdView) findViewById(R.id.banner_ad);
-        AdRequest request = new AdRequest.Builder().build();
-        mBannerAd.setAdListener(new AdListener() {
-            @Override
-            public void onAdFailedToLoad(int i) {
-                mBannerAd.setVisibility(View.GONE);
-                super.onAdFailedToLoad(i);
-            }
-
-            @Override
-            public void onAdLoaded() {
-                mBannerAd.setVisibility(View.VISIBLE);
-                super.onAdLoaded();
-            }
-
-            @Override
-            public void onAdOpened() {
-                // TODO add analytic tracking
-                super.onAdOpened();
-            }
-        });
-        mBannerAd.loadAd(request);
-        mBannerAd.setVisibility(View.GONE);
+//        mBannerAd = (AdView) findViewById(R.id.banner_ad);
+//        AdRequest request = new AdRequest.Builder().build();
+//        mBannerAd.setAdListener(new AdListener() {
+//            @Override
+//            public void onAdFailedToLoad(int i) {
+//                mBannerAd.setVisibility(View.GONE);
+//                super.onAdFailedToLoad(i);
+//            }
+//
+//            @Override
+//            public void onAdLoaded() {
+//                mBannerAd.setVisibility(View.VISIBLE);
+//                super.onAdLoaded();
+//            }
+//
+//            @Override
+//            public void onAdOpened() {
+//                // TODO add analytic tracking
+//                super.onAdOpened();
+//            }
+//        });
+//        mBannerAd.loadAd(request);
+//        mBannerAd.setVisibility(View.GONE);
     }
 
-    private void initTransitions() {
+    private void initTransitions()
+    {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 
@@ -103,18 +100,21 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void loadTMContainer() {
+    private void loadTMContainer()
+    {
         final HearthListApplication myApp = ((HearthListApplication) getApplication());
 
         mTagManager = myApp.getTagManager();
 
-        PendingResult pendingResult =
+        PendingResult<ContainerHolder> pendingResult =
                 mTagManager.loadContainerPreferFresh(getString(R.string.gtm_default_string),
                         R.raw.gtm_default);
 
-        pendingResult.setResultCallback(new ResultCallback<ContainerHolder>() {
+        pendingResult.setResultCallback(new ResultCallback<ContainerHolder>()
+        {
             @Override
-            public void onResult(@NonNull ContainerHolder containerHolder) {
+            public void onResult(@NonNull ContainerHolder containerHolder)
+            {
                 // Check for error
                 if (!containerHolder.getStatus().isSuccess()) {
                     // error
@@ -142,7 +142,8 @@ public class MainActivity extends AppCompatActivity {
      * if the app needs to start the DataDownloadIntentService to get
      * new cards.
      */
-    private void checkForAutoUpdate() {
+    private void checkForAutoUpdate()
+    {
 
         HearthListApplication myApp = ((HearthListApplication) getApplication());
 
